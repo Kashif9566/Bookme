@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { clearUser } from "../../../redux/slice/user.slice";
 import { useState } from "react";
 import { searchProperty } from "../../../redux/slice/property.slice";
+import { Link } from "react-router-dom";
 
 const Nav = () => {
   const user = useSelector((state) => state.user);
@@ -85,6 +86,13 @@ const Nav = () => {
                 Search
               </button>
             </form>
+
+            <Link
+              to="/reservations"
+              className="btn btn-outline-dark rounded-pill mx-2"
+            >
+              My Bookings
+            </Link>
 
             <div className="d-flex align-items-center">
               <button

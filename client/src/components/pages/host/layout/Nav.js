@@ -85,6 +85,15 @@ const Nav = () => {
                 </a>
               </li>
               <li className="nav-item">
+                <a
+                  className="nav-link"
+                  href="/hosting/analytics"
+                  onClick={() => navigate("//hosting/analytics")}
+                >
+                  Analytics
+                </a>
+              </li>
+              <li className="nav-item">
                 <a className="nav-link" href="/hosting/reservations">
                   Reservations
                 </a>

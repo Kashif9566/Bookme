@@ -6,6 +6,7 @@ import {
   fetchProperty,
 } from "../../../redux/slice/property.slice";
 import Nav from "./Nav";
+import Footer from "./Footer/Footer";
 
 const HomePage = () => {
   const properties = useSelector(selectProperty);
@@ -19,6 +20,7 @@ const HomePage = () => {
       <div className="co-md-12">
         <Nav />
         <Properties />
+        <Footer />
       </div>
     </div>
   );

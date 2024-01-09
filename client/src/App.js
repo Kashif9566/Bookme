@@ -13,6 +13,8 @@ import Welcome from "./components/pages/host/Welcome";
 import RegistrationPage from "./components/pages/RegistrationPage/RegistrationPage";
 import ReservationPage from "./components/pages/host/reservation/ReservationPage";
 import AllReservations from "./components/pages/host/reservation/AllReservations";
+import Reservations from "./components/pages/user/reservations/Reservations";
+import Analytics from "./components/pages/host/analytics/Analytics";
 
 function App() {
   const user = useSelector((state) => state.user);
@@ -47,6 +49,7 @@ function App() {
                 path="/hosting/reservations"
                 element={<AllReservations />}
               />
+              <Route path="/hosting/analytics" element={<Analytics />} />
             </>
           ) : (
             <>
@@ -55,6 +58,7 @@ function App() {
                 path="/propertyDetails/:propertyId"
                 element={<PropertyDetails />}
               />
+              <Route path="/reservations" element={<Reservations />} />
             </>
           )
         ) : (

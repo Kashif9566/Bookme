@@ -6,6 +6,7 @@ const initialState = {
   properties: [],
   singleProperty: null,
   searchProperties: null,
+  hostProperties: [],
   isLoading: false,
   isError: false,
 };
@@ -30,6 +31,14 @@ export const searchProperty = createAsyncThunk(
   "searchProperty",
   async (searchTerm) => {
     const response = await api.get(`/search?query=${searchTerm}`);
+    return response.data;
+  }
+);
+
+export const fetchPropertyForHost = createAsyncThunk(
+  "fetchPropertyForHost",
+  async (userId) => {
+    const response = await api.get(`/user/${userId}/property`);
     return response.data;
   }
 );
@@ -75,6 +84,16 @@ const propertySlice = createSlice({
       .addCase(searchProperty.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
+      })
+      .addCase(fetchPropertyForHost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchPropertyForHost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.hostProperties = action.payload;
+      })
+      .addCase(fetchPropertyForHost.rejected, (state) => {
+        state.isError = true;
       });
   },
 });
@@ -83,3 +102,4 @@ export default propertySlice.reducer;
 export const selectProperty = (state) => state.property.properties;
 export const selectSingleProperty = (state) => state.property.singleProperty;
 export const selectSearchProperty = (state) => state.property.searchProperties;
+export const selectPropertiesForHost = (state) => state.property.hostProperties;

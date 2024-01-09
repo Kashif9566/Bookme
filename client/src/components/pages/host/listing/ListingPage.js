@@ -1,34 +1,24 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ListingModel from "./ListingModel";
 import Nav from "../layout/Nav";
 import Loader from "../../../Loader";
 import api from "../../../../api/api";
+import {
+  fetchPropertyForHost,
+  selectPropertiesForHost,
+} from "../../../../redux/slice/property.slice";
 
 const ListingPage = () => {
-  const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
   const user = useSelector((state) => state.user);
   const userId = user.id;
-
-  const fetchPropertyForUser = useCallback(async () => {
-    try {
-      const { data } = await api.get(`/user/${userId}/property`);
-      if (data) {
-        setProperties(data);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [userId]);
-
+  const dispatch = useDispatch();
   useEffect(() => {
-    fetchPropertyForUser();
-  }, [fetchPropertyForUser]);
-
+    dispatch(fetchPropertyForHost(userId));
+  }, [dispatch, fetchPropertyForHost]);
+  const loading = useSelector((state) => state.property.isLoading);
+  const properties = useSelector(selectPropertiesForHost);
   return (
     <div className="row">
       <div className="col-md-12">
@@ -68,7 +58,7 @@ const ListingPage = () => {
                     <div key={property.id} className="col-md-4 ">
                       <ListingModel
                         property={property}
-                        fetchPropertyForUser={fetchPropertyForUser}
+                        fetchPropertyForUser={fetchPropertyForHost}
                       />
                     </div>
                   ))}

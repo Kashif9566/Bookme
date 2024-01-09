@@ -2,7 +2,16 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="bg-light py-3 mt-auto">
+    <footer
+      className="bg-light"
+      style={{
+        position: "fixed",
+        bottom: 0,
+        width: "100%",
+        textAlign: "center",
+        padding: "10px",
+      }}
+    >
       <div className="container">
         <div className="row">
           <div className="col-md-12 d-flex justify-content-between align-items-center">

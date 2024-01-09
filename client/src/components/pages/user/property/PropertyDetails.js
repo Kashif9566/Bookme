@@ -93,7 +93,7 @@ const PropertyDetails = () => {
     }
   };
   return (
-    <dic className="container">
+    <div>
       {isLoading ? (
         <div>
           <Loader />
@@ -409,7 +409,7 @@ const PropertyDetails = () => {
           <ToastContainer />
         </div>
       )}
-    </dic>
+    </div>
   );
 };
 

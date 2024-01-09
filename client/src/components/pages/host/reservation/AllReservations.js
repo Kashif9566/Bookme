@@ -1,31 +1,23 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Nav from "../layout/Nav";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../../Loader";
-import api from "../../../../api/api";
+import {
+  fetchAllReservationsForHost,
+  selectAllReservationsForHost,
+} from "../../../../redux/slice/reservation.slice";
 
 const AllReservations = () => {
-  const [reservations, setReservations] = useState([]);
-  const [loading, setLoading] = useState(true);
   const user = useSelector((state) => state.user);
-
-  const fetchReservations = useCallback(async () => {
-    try {
-      setLoading(true);
-      const { data } = await api.get(`/host/${user.id}/reservations`);
-      if (data) {
-        setReservations(data);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [user.id]);
+  const userId = user.id;
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchReservations();
-  }, [fetchReservations]);
+    dispatch(fetchAllReservationsForHost(userId));
+  }, [dispatch, fetchAllReservationsForHost]);
+
+  const loading = useSelector((state) => state.reservation.isLoading);
+  const reservations = useSelector(selectAllReservationsForHost);
 
   return (
     <div className="row">

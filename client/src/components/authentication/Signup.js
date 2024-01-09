@@ -48,12 +48,12 @@ const Signup = () => {
     e.preventDefault();
     try {
       if (!username || !email || !password || !confirmpassword) {
-        toast.error("Please provide all fields");
+        toast.error("Please provide all fields", { autoClose: 1000 });
         return;
       }
 
       if (password !== confirmpassword) {
-        toast.error("Passwords do not match");
+        toast.error("Passwords do not match", { autoClose: 1000 });
         return;
       }
 
@@ -80,21 +80,17 @@ const Signup = () => {
           loading: false,
         });
         console.log(response.data);
-        toast.success("Account created successfully!");
+        toast.success("Account created successfully!", { autoClose: 1000 });
         localStorage.setItem("userInfo", JSON.stringify(response.data));
         navigate("/login");
-      } else if (response.status === 400) {
-        if (
-          response.data.error.includes("User with this email already exists")
-        ) {
-          toast.error("User with this email already exists");
-        } else {
-          toast.error("Error creating Account");
-        }
       }
     } catch (error) {
-      console.error(error);
-      toast.error("Error creating Account");
+      if (error.response && error.response.status === 400) {
+        toast.error("User already exists", { autoClose: 1000 });
+      } else {
+        console.error(error);
+        toast.error("Error creating Account", { autoClose: 1000 });
+      }
     } finally {
       setFormData((prevFormData) => ({ ...prevFormData, loading: false }));
     }

@@ -40,16 +40,27 @@ const Login = () => {
 
       const { role } = data;
       if (role === "host") {
+        toast.success("Login Successful", { autoClose: 1000 });
         navigate("/hosting");
       } else {
         navigate("/home");
       }
 
-      toast.success("Login Successful");
       localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
-      console.error(error);
-      toast.error("Error signing in");
+      if (error.response) {
+        if (error.response.status === 404) {
+          toast.error("User does not exist", { autoClose: 1000 });
+        } else if (error.response.status === 401) {
+          toast.error("Incorrect password", { autoClose: 1000 });
+        } else {
+          console.error(error);
+          toast.error("Error signing in", { autoClose: 1000 });
+        }
+      } else {
+        console.error(error);
+        toast.error("Error signing in", { autoClose: 1000 });
+      }
     }
   };
 
