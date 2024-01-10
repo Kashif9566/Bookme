@@ -14,7 +14,6 @@ exports.createProperty = async (req, res) => {
     bed,
     bathroom,
     province,
-    country,
   } = req.body;
 
   const image = req.file ? req.file.path : null;
@@ -34,7 +33,6 @@ exports.createProperty = async (req, res) => {
       bathroom,
       image,
       province,
-      country,
       UserId: userId,
     });
 
