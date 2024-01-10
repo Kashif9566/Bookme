@@ -26,6 +26,7 @@ const ListingForm = () => {
     price: "",
     tagLine: "",
   });
+  const [loading, setLoading] = useState(false);
   const handleFieldChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
   };
@@ -41,6 +42,7 @@ const ListingForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const requiredFields = ["address", "city", "province", "price"];
       if (requiredFields.some((field) => !formData[field])) {
         toast.error("Please provide necessary information");
@@ -67,6 +69,8 @@ const ListingForm = () => {
     } catch (error) {
       toast.error("Error listing property");
       console.error("Error listing property:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -383,8 +387,9 @@ const ListingForm = () => {
             <button
               type="submit"
               className="btn btn-secondary d-flex align-items-start"
+              disabled={loading}
             >
-              Save
+              {loading ? "Saving..." : "Save"}
             </button>
           </div>
         </form>
