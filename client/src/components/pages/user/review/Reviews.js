@@ -18,6 +18,7 @@ const Reviews = ({ property }) => {
   const userId = user.id;
   const propertyId = property.id;
   const dispatch = useDispatch();
+  const isSubmitDisabled = !content || !rating;
 
   useEffect(() => {
     dispatch(fetchReviews({ propertyId }));
@@ -79,7 +80,11 @@ const Reviews = ({ property }) => {
             value={rating}
             onChange={(e) => setRating(e.target.value)}
           />
-          <button type="submit" className="btn btn-secondary mt-2 mx-4">
+          <button
+            type="submit"
+            className="btn btn-secondary mt-2 mx-4"
+            disabled={isSubmitDisabled}
+          >
             submit
           </button>
         </form>
@@ -88,43 +93,45 @@ const Reviews = ({ property }) => {
       <hr />
 
       {reviews.map((review, index) => (
-        <div key={index} className="row">
-          <div className="col-md-6 d-flex flex-column">
-            <div className="mt-4 mb-1 d-flex align-items-center justify-content-start">
-              {review.User.image ? (
-                <img
-                  style={{
-                    width: "50px",
-                    height: "50px",
-                    borderRadius: "50%",
-                  }}
-                  src={`https://bookme-k9xo.onrender.com/${review.User.image}`}
-                  alt="User Avatar"
-                />
-              ) : (
-                <FontAwesomeIcon className="mx-1" icon={faUser} />
-              )}
-              <div className="d-flex flex-column">
-                <span style={{ fontWeight: 600, marginLeft: 5 }}>
-                  {review.User.username}
-                </span>
-                <span style={{ fontSize: "10px", marginLeft: 5 }}>
-                  {new Date(review.createdAt).toLocaleString()}
+        <div className="col-md-6 d-flex">
+          <div key={index} className="row">
+            <div className="d-flex flex-column">
+              <div className="mt-4 mb-1 d-flex align-items-center justify-content-start">
+                {review.User.image ? (
+                  <img
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "50%",
+                    }}
+                    src={`https://bookme-k9xo.onrender.com/${review.User.image}`}
+                    alt="User Avatar"
+                  />
+                ) : (
+                  <FontAwesomeIcon className="mx-1" icon={faUser} />
+                )}
+                <div className="d-flex flex-column">
+                  <span style={{ fontWeight: 600, marginLeft: 5 }}>
+                    {review.User.username}
+                  </span>
+                  <span style={{ fontSize: "10px", marginLeft: 5 }}>
+                    {new Date(review.createdAt).toLocaleString()}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <span>
+                  {Array.from({ length: review.rating }, (_, index) => (
+                    <FontAwesomeIcon
+                      key={index}
+                      icon={faStar}
+                      style={{ fontSize: "12px" }}
+                    />
+                  ))}
                 </span>
               </div>
+              <span>{review.content}</span>
             </div>
-            <div>
-              <span>
-                {Array.from({ length: review.rating }, (_, index) => (
-                  <FontAwesomeIcon
-                    key={index}
-                    icon={faStar}
-                    style={{ fontSize: "12px" }}
-                  />
-                ))}
-              </span>
-            </div>
-            <span>{review.content}</span>
           </div>
         </div>
       ))}

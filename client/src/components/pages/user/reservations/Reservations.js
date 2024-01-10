@@ -5,6 +5,7 @@ import api from "../../../../api/api";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
 
 const Reservations = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -59,7 +60,21 @@ const Reservations = () => {
                 <h3>My Bookings</h3>
                 <p>Total Bookings: {reservations.length}</p>
                 {reservations.length === 0 ? (
-                  <p>You have not made any bookings yet.</p>
+                  <div className="card p-3">
+                    <p>You have not made any bookings yet</p>
+                    <div>
+                      <p style={{ color: "#1e2d7d ", fontWeight: 500 }}>
+                        Want to book a place ?
+                      </p>
+                      <Link
+                        to={"/home"}
+                        className="btn btn-secondary"
+                        style={{ backgroundColor: "#ff385d ", border: "0px" }}
+                      >
+                        See our Listing
+                      </Link>
+                    </div>
+                  </div>
                 ) : (
                   <div className="table-responsive">
                     <table className="table table-bordered table-striped">
@@ -75,10 +90,18 @@ const Reservations = () => {
                       <tbody>
                         {reservations.map((reservation) => (
                           <tr key={reservation.id}>
-                            <td>{reservation.Property.address}</td>
+                            <td>
+                              {reservation.Property
+                                ? reservation.Property.address
+                                : "N/A"}
+                            </td>
                             <td>{formatDate(reservation.checkIn)}</td>
                             <td>{formatDate(reservation.checkOut)}</td>
-                            <td>{reservation.Property.city}</td>
+                            <td>
+                              {reservation.Property
+                                ? reservation.Property.city
+                                : "N/A"}
+                            </td>
                             <td>
                               <div
                                 className="btn btn-danger"

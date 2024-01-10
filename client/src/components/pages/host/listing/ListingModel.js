@@ -5,7 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../../../api/api";
 
-const ListingModel = ({ property, fetchPropertyForUser }) => {
+const ListingModel = ({ property, onPropertyDeleted }) => {
   const user = useSelector((state) => state.user);
   const userId = user.id;
   const handleDelete = async (propertyId) => {
@@ -15,7 +15,7 @@ const ListingModel = ({ property, fetchPropertyForUser }) => {
       );
       if (response) {
         toast.success("property deleted sucessfully");
-        fetchPropertyForUser(userId);
+        onPropertyDeleted(propertyId);
       }
     } catch (error) {
       console.error("Error deleting property:", error);

@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ListingModel from "./ListingModel";
 import Nav from "../layout/Nav";
 import Loader from "../../../Loader";
-import api from "../../../../api/api";
 import {
   fetchPropertyForHost,
   selectPropertiesForHost,
@@ -14,11 +13,18 @@ const ListingPage = () => {
   const user = useSelector((state) => state.user);
   const userId = user.id;
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(fetchPropertyForHost(userId));
-  }, [dispatch, fetchPropertyForHost]);
+  }, [dispatch, userId]);
+
   const loading = useSelector((state) => state.property.isLoading);
   const properties = useSelector(selectPropertiesForHost);
+
+  const handlePropertyDeleted = () => {
+    dispatch(fetchPropertyForHost(userId));
+  };
+
   return (
     <div className="row">
       <div className="col-md-12">
@@ -58,7 +64,7 @@ const ListingPage = () => {
                     <div key={property.id} className="col-md-4 ">
                       <ListingModel
                         property={property}
-                        fetchPropertyForUser={fetchPropertyForHost}
+                        onPropertyDeleted={handlePropertyDeleted}
                       />
                     </div>
                   ))}

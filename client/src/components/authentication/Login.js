@@ -10,6 +10,8 @@ const Login = () => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const { email, password } = formData;
   const navigate = useNavigate();
 
@@ -25,6 +27,8 @@ const Login = () => {
         toast.error("Please provide email and password");
         return;
       }
+
+      setLoading(true);
 
       const config = {
         headers: {
@@ -61,6 +65,8 @@ const Login = () => {
         console.error(error);
         toast.error("Error signing in", { autoClose: 1000 });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -82,8 +88,12 @@ const Login = () => {
             />
           </div>
         ))}
-        <button type="submit" className="btn btn-secondary btn-block my-3">
-          <b>Login</b>
+        <button
+          type="submit"
+          className="btn btn-secondary btn-block my-3"
+          disabled={loading}
+        >
+          <b>{loading ? "Logging in..." : "Login"}</b>
         </button>
       </form>
       <ToastContainer />

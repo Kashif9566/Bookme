@@ -62,7 +62,7 @@ const ListingForm = () => {
       );
       if (data) {
         toast.success("Property listed successfully!");
-        navigate("/hosting");
+        navigate("/hosting/listing");
       } else {
         toast.error("Error listing property");
       }

@@ -16,11 +16,16 @@ export const calculateTotalRating = (reviews) => {
     return 0;
   }
 
-  const totalRating = reviews.reduce(
-    (sum, review) => sum + parseFloat(review.rating),
-    0
-  );
-  const averageRating = totalRating / reviews.length;
+  const validRatings = reviews
+    .map((review) => parseFloat(review.rating))
+    .filter((rating) => !isNaN(rating));
+
+  if (validRatings.length === 0) {
+    return 0;
+  }
+
+  const totalRating = validRatings.reduce((sum, rating) => sum + rating, 0);
+  const averageRating = totalRating / validRatings.length;
 
   return averageRating;
 };
