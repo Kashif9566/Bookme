@@ -15,7 +15,7 @@ const ListingModel = ({ property, fetchPropertyForUser }) => {
       );
       if (response) {
         toast.success("property deleted sucessfully");
-        fetchPropertyForUser();
+        fetchPropertyForUser(userId);
       }
     } catch (error) {
       console.error("Error deleting property:", error);
@@ -28,7 +28,7 @@ const ListingModel = ({ property, fetchPropertyForUser }) => {
         <div className="card">
           <div>
             <img
-              src={`https://bookme-hrs5.onrender.com/${property.image}`}
+              src={`https://bookme-k9xo.onrender.com/${property.image}`}
               className="card-img-top"
               alt={`${property.name}`}
               style={{

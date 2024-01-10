@@ -13,7 +13,7 @@ const PropertyModel = ({ property, reviews, totalRating }) => {
         <div className="card">
           <div>
             <img
-              src={`https://bookme-hrs5.onrender.com/${property.image}`}
+              src={`https://bookme-k9xo.onrender.com/${property.image}`}
               className="card-img-top"
               alt={`${property.name}`}
               style={{

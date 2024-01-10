@@ -138,12 +138,17 @@ const Nav = () => {
       {showProfileCard && (
         <div
           className="card p-3 m-3"
-          style={{ position: "absolute", top: "60px", right: "10px" }}
+          style={{
+            position: "absolute",
+            top: "60px",
+            right: "10px",
+            zIndex: 1000,
+          }}
         >
           <div className="d-flex">
             {user.image ? (
               <img
-                src={`https://bookme-hrs5.onrender.com/${user.image}`}
+                src={`https://bookme-k9xo.onrender.com/${user.image}`}
                 alt={`Profile of ${user.username}`}
                 style={{
                   width: "100px",

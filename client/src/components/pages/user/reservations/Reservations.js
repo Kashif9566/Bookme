@@ -39,7 +39,7 @@ const Reservations = () => {
       );
       if (response.status === 200) {
         toast.success("Reservation Cancelled", { autoClose: 1000 });
-        fetchReservations(); // Call the callback after successful cancellation
+        fetchReservations();
       }
     } catch (error) {
       console.error(error);

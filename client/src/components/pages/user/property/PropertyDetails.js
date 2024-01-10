@@ -106,7 +106,7 @@ const PropertyDetails = () => {
               <div className="container">
                 <div className="row">
                   <img
-                    src={`https://bookme-hrs5.onrender.com/${property.image}`}
+                    src={`https://bookme-k9xo.onrender.com/${property.image}`}
                     className="card-img-top col-md-11 my-5"
                     alt={`${property.name}`}
                     style={{
@@ -142,7 +142,7 @@ const PropertyDetails = () => {
                               height: "70px",
                               borderRadius: "50%",
                             }}
-                            src={`https://bookme-hrs5.onrender.com/${property.User.image}`}
+                            src={`https://bookme-k9xo.onrender.com/${property.User.image}`}
                             alt={`${property.User.username}`}
                           />
                         ) : (
@@ -204,7 +204,7 @@ const PropertyDetails = () => {
                           <div className="card shadow d-flex flex-column flex-md-row align-items-center mx-5 justify-content-center">
                             <div className="d-flex flex-column align-items-center">
                               <img
-                                src={`https://bookme-hrs5.onrender.com/${property.User.image}`}
+                                src={`https://bookme-k9xo.onrender.com/${property.User.image}`}
                                 className="card-img-top rounded-circle"
                                 alt={`${property.User.username}`}
                                 style={{

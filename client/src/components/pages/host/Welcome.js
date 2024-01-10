@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Nav from "./layout/Nav";
+
 const Welcome = () => {
   const user = useSelector((state) => state.user);
 
@@ -9,10 +10,7 @@ const Welcome = () => {
     <div className="row">
       <div className="col-md-12">
         <Nav />
-        <div
-          className="card py-5"
-          style={{ borderRadius: "0px", height: "100%" }}
-        >
+        <div className="card py-5" style={{ border: "0px", height: "100%" }}>
           <div
             className="container d-flex justify-content-between align-items-center"
             style={{ height: "100%" }}

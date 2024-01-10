@@ -34,6 +34,7 @@ const ListingForm = () => {
     handleFieldChange("image", file);
   };
   const serviceFee = 0.1 * parseFloat(formData.price);
+  const formattedServiceFee = serviceFee.toFixed(2);
   const totalWithServiceFee = parseFloat(formData.price) + serviceFee;
   const youEarn = formData.price - serviceFee;
 
@@ -348,7 +349,7 @@ const ListingForm = () => {
                   </div>
                   <div className="d-flex align-items-center justify-content-between">
                     <span>Service Fee</span>
-                    <span>${serviceFee}</span>
+                    <span>${formattedServiceFee}</span>
                   </div>
                   <hr
                     style={{

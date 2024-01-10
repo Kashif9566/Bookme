@@ -1,4 +1,3 @@
-// Analytics.js
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Nav from "../layout/Nav";
@@ -37,10 +36,19 @@ const Analytics = () => {
     return reservationsForDay.length;
   });
 
-  const totalRevenue = reservations.reduce((total, reservation) => {
-    const property = properties.find((p) => p.id === reservation.PropertyId);
-    return total + (property ? property.price : 0);
-  }, 0);
+  const calculateTotalRevenue = () => {
+    return reservations.reduce((total, reservation) => {
+      const property = properties.find((p) => p.id === reservation.PropertyId);
+      const checkInDate = new Date(reservation.checkIn);
+      const checkOutDate = new Date(reservation.checkOut);
+      const durationInDays = Math.ceil(
+        (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
+      );
+
+      return total + (property ? property.price * durationInDays : 0);
+    }, 0);
+  };
+  const totalRevenue = calculateTotalRevenue();
 
   return (
     <div style={{ backgroundColor: "#fdfcfe" }}>

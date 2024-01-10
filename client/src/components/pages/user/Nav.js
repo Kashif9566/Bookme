@@ -135,7 +135,7 @@ const Nav = () => {
         >
           <div className="d-flex">
             <img
-              src={`https://bookme-hrs5.onrender.com/${user.image}`}
+              src={`https://bookme-k9xo.onrender.com/${user.image}`}
               alt="Profile Avatar"
               style={{
                 width: "100px",

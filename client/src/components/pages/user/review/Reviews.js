@@ -98,7 +98,7 @@ const Reviews = ({ property }) => {
                     height: "50px",
                     borderRadius: "50%",
                   }}
-                  src={`https://bookme-hrs5.onrender.com/${review.User.image}`}
+                  src={`https://bookme-k9xo.onrender.com/${review.User.image}`}
                   alt="User Avatar"
                 />
               ) : (
