@@ -6,6 +6,7 @@ const { protect } = require("../middleware/authMiddleware");
 
 router.post(
   "/user/:userId/property",
+  protect,
   upload.single("image"),
   property.createProperty
 );
