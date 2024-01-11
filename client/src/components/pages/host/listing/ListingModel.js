@@ -15,28 +15,38 @@ const ListingModel = ({ property, onPropertyDeleted }) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        withCredentials: true,
       };
       const response = await api.delete(
         `/user/${userId}/property/${propertyId}`,
         config
       );
+
       if (response) {
-        toast.success("property deleted sucessfully");
+        toast.success("Property deleted successfully");
         onPropertyDeleted(propertyId);
       }
     } catch (error) {
       console.error("Error deleting property:", error);
-      toast.error("Error deleting property: " + error.message);
+
+      if (error.response) {
+        console.error("Server responded with status:", error.response.status);
+      } else if (error.request) {
+        console.error("No response received from the server");
+      } else {
+        console.error("Error setting up the request:", error.message);
+      }
+
+      toast.error("Error deleting property. See console for details.");
     }
   };
+
   return (
     <div>
       <div className="d-flex flex-column justify-content-between">
         <div className="card">
           <div>
             <img
-              src={`https://bookme-k9xo.onrender.com/${property.image}`}
+              src={`${api.defaults.baseURL}/${property.image}`}
               className="card-img-top"
               alt={`${property.name}`}
               style={{

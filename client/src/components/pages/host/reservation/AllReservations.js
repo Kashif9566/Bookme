@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import Nav from "../layout/Nav";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../../Loader";
@@ -14,7 +14,7 @@ const AllReservations = () => {
 
   useEffect(() => {
     dispatch(fetchAllReservationsForHost(userId));
-  }, [dispatch, fetchAllReservationsForHost]);
+  }, [dispatch, userId]);
 
   const loading = useSelector((state) => state.reservation.isLoading);
   const reservations = useSelector(selectAllReservationsForHost);

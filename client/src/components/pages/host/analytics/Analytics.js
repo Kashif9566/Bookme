@@ -11,7 +11,6 @@ import {
   fetchAllReservationsForHost,
   selectAllReservationsForHost,
 } from "../../../../redux/slice/reservation.slice";
-import RevenueDonutChart from "./RevenueDonutChart";
 import { Doughnut } from "react-chartjs-2";
 
 const Analytics = () => {
@@ -69,6 +68,7 @@ const Analytics = () => {
       },
     ],
   };
+  const hasListingsData = properties.length > 0;
 
   return (
     <div style={{ backgroundColor: "#fdfcfe" }}>
@@ -102,15 +102,25 @@ const Analytics = () => {
             </div>
             <div className="row d-flex justify-content-between">
               <div className="card col-4">
-                <Doughnut data={listingsData} />
+                {hasListingsData ? (
+                  <Doughnut data={listingsData} />
+                ) : (
+                  <p
+                    className="d-flex justify-content-center"
+                    style={{
+                      fontSize: "20px",
+                      marginTop: "50%",
+                      fontWeight: 600,
+                    }}
+                  >
+                    No listing stats yet
+                  </p>
+                )}
               </div>
               <div className="card col-7">
                 <h4 className="mx-3 mt-3">Reservations Stats</h4>
                 <ReservationsChart reservationsData={reservationsData} />
               </div>
-              {/* <div className="card col-4">
-                <RevenueDonutChart revenueData={totalRevenue} />
-              </div> */}
             </div>
           </div>
         </div>

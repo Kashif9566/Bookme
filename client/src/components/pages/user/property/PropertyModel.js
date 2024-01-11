@@ -2,8 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { calculateTotalRating } from "../../../helper/Helpers";
+import api from "../../../../api/api";
+import LazyLoad from "react-lazyload";
 
-const PropertyModel = ({ property, reviews, totalRating }) => {
+const PropertyModel = ({ property }) => {
+  const reviewsLength = property.Reviews.length;
+  const reviews = property.Reviews;
+  const totalRating = calculateTotalRating(reviews);
+
   return (
     <Link
       to={`/propertyDetails/${property.id}`}
@@ -12,16 +19,18 @@ const PropertyModel = ({ property, reviews, totalRating }) => {
       <div className="d-flex flex-column justify-content-between">
         <div className="card">
           <div>
-            <img
-              src={`https://bookme-k9xo.onrender.com/${property.image}`}
-              className="card-img-top"
-              alt={`${property.name}`}
-              style={{
-                flex: "1",
-                objectFit: "cover",
-                height: "240px",
-              }}
-            />
+            <LazyLoad height={240}>
+              <img
+                src={`${api.defaults.baseURL}/${property.image}`}
+                className="card-img-top"
+                alt={`${property.name}`}
+                style={{
+                  flex: "1",
+                  objectFit: "cover",
+                  height: "240px",
+                }}
+              />
+            </LazyLoad>
           </div>
         </div>
         <div
@@ -32,7 +41,7 @@ const PropertyModel = ({ property, reviews, totalRating }) => {
           <div>
             <FontAwesomeIcon icon={faStar} />
             <span>{totalRating.toFixed(2)}</span>
-            <span className="mx-1">({reviews.length})</span>
+            <span className="mx-1">({reviewsLength})</span>
           </div>
         </div>
 

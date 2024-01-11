@@ -36,16 +36,16 @@ const Reviews = ({ property }) => {
         userId,
       });
       if (response.data) {
-        toast.success("Review submitted successfully");
+        toast.success("Review submitted successfully", { autoClose: 1000 });
         dispatch(fetchReviews({ propertyId }));
         setContent("");
         setRating("");
       } else {
-        toast.error("Error sending review");
+        toast.error("Error sending review", { autoClose: 1000 });
       }
     } catch (error) {
       console.log(error);
-      toast.error("Error sending review:", error);
+      toast.error("Error sending review:", error, { autoClose: 1000 });
     }
   };
 
@@ -104,7 +104,7 @@ const Reviews = ({ property }) => {
                       height: "50px",
                       borderRadius: "50%",
                     }}
-                    src={`https://bookme-k9xo.onrender.com/${review.User.image}`}
+                    src={`${api.defaults.baseURL}/${review.User.image}`}
                     alt="User Avatar"
                   />
                 ) : (

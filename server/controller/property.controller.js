@@ -1,8 +1,8 @@
 const Property = require("../model/property.model");
 const User = require("../model/user.model");
 const Review = require("../model/review.model");
-
 const { Op } = require("sequelize");
+
 exports.createProperty = async (req, res) => {
   const {
     address,
@@ -46,10 +46,6 @@ exports.createProperty = async (req, res) => {
         },
         {
           model: Review,
-          attributes: [
-            [sequelize.fn("COUNT", sequelize.col("id")), "reviewCount"],
-            [sequelize.fn("AVG", sequelize.col("rating")), "averageRating"],
-          ],
         },
       ],
     });
@@ -71,10 +67,6 @@ exports.getProperties = async (req, res) => {
         },
         {
           model: Review,
-          attributes: [
-            [sequelize.fn("COUNT", sequelize.col("id")), "reviewCount"],
-            [sequelize.fn("AVG", sequelize.col("rating")), "averageRating"],
-          ],
         },
       ],
     });
@@ -96,10 +88,6 @@ exports.getPropertyById = async (req, res) => {
         },
         {
           model: Review,
-          attributes: [
-            [sequelize.fn("COUNT", sequelize.col("id")), "reviewCount"],
-            [sequelize.fn("AVG", sequelize.col("rating")), "averageRating"],
-          ],
         },
       ],
     });

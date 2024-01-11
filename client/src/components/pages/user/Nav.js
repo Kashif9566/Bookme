@@ -4,6 +4,7 @@ import { clearUser } from "../../../redux/slice/user.slice";
 import { useState } from "react";
 import { searchProperty } from "../../../redux/slice/property.slice";
 import { Link } from "react-router-dom";
+import api from "../../../api/api";
 
 const Nav = () => {
   const user = useSelector((state) => state.user);
@@ -135,7 +136,7 @@ const Nav = () => {
         >
           <div className="d-flex">
             <img
-              src={`https://bookme-k9xo.onrender.com/${user.image}`}
+              src={`${api.defaults.baseURL}/${user.image}`}
               alt="Profile Avatar"
               style={{
                 width: "100px",

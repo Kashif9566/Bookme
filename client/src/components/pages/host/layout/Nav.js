@@ -2,8 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearUser } from "../../../../redux/slice/user.slice";
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
+import api from "../../../../api/api";
 
 const Nav = () => {
   const user = useSelector((state) => state.user);
@@ -84,6 +83,7 @@ const Nav = () => {
                   Listing
                 </a>
               </li>
+              <hr className="w-75 mx-0 my-1" />
               <li className="nav-item">
                 <a
                   className="nav-link"
@@ -93,6 +93,7 @@ const Nav = () => {
                   Analytics
                 </a>
               </li>
+              <hr className="w-75 mx-0 my-1" />
               <li className="nav-item">
                 <a className="nav-link" href="/hosting/reservations">
                   Reservations
@@ -108,9 +109,7 @@ const Nav = () => {
                 </button>
               </li>
               <hr className="w-75 mx-0 my-1" />
-              <li className="nav-item mx-2">
-                <FontAwesomeIcon icon={faBell} size="lg" color="#ff385d" />
-              </li>
+
               <li className="nav-item">
                 <button
                   className="btn btn-link"
@@ -148,7 +147,7 @@ const Nav = () => {
           <div className="d-flex">
             {user.image ? (
               <img
-                src={`https://bookme-k9xo.onrender.com/${user.image}`}
+                src={`${api.defaults.baseURL}/${user.image}`}
                 alt={`Profile of ${user.username}`}
                 style={{
                   width: "100px",
