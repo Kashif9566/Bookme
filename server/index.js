@@ -9,12 +9,13 @@ const reservationRoutes = require("./route/reservation.route");
 const dotenv = require("dotenv");
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "*",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
 
 app.use(cors(corsOptions));
+app.use(express.json());
 
 app.use("/uploads", express.static("uploads"));
 app.use("/user", userRoutes);

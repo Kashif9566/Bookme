@@ -8,7 +8,6 @@ import api from "../../../../api/api";
 const ListingModel = ({ property, onPropertyDeleted }) => {
   const user = useSelector((state) => state.user);
   const token = user.token;
-
   const userId = user.id;
   const handleDelete = async (propertyId) => {
     try {
