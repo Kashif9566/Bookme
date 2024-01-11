@@ -8,14 +8,13 @@ const reviewRoutes = require("./route/reviews.route");
 const reservationRoutes = require("./route/reservation.route");
 const dotenv = require("dotenv");
 
-app.use(
-  cors({
-    origin: "*",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-  })
-);
-app.use(express.json());
+const corsOptions = {
+  origin: "http://localhost:3000",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use("/uploads", express.static("uploads"));
 app.use("/user", userRoutes);
