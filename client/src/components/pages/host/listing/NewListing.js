@@ -13,9 +13,18 @@ const NewListing = () => {
     <div className="container">
       <div>
         <div className="d-flex justify-content-between align-items-center mx-2 my-5">
-          <span style={{ fontSize: "30px", fontWeight: "bold" }}>
+          <a
+            href="/hosting"
+            style={{
+              fontSize: "30px",
+              fontWeight: "bold",
+              listStyle: "none",
+              textDecoration: "none",
+              color: "black",
+            }}
+          >
             <FaHome /> Bookme.com
-          </span>
+          </a>
           <button
             style={{
               border: "1px solid black",
@@ -40,6 +49,7 @@ const NewListing = () => {
           <Link
             to={"/listingForm"}
             className="d-flex align-items-center justify-content-between mt-4"
+            style={{ textDecoration: "none", color: "black" }}
           >
             <div
               style={{
@@ -48,6 +58,7 @@ const NewListing = () => {
                 fontSize: "35px",
                 cursor: "pointer",
                 marginRight: "20px",
+                color: "black",
               }}
             >
               <FaHome />
@@ -57,6 +68,7 @@ const NewListing = () => {
                 fontSize: "18px",
                 fontWeight: 300,
                 marginTop: "11px",
+                color: "black",
               }}
             >
               Create a New Listing

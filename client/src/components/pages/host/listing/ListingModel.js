@@ -7,11 +7,20 @@ import api from "../../../../api/api";
 
 const ListingModel = ({ property, onPropertyDeleted }) => {
   const user = useSelector((state) => state.user);
+  const token = user.token;
+
   const userId = user.id;
   const handleDelete = async (propertyId) => {
     try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      };
       const response = await api.delete(
-        `/user/${userId}/property/${propertyId}`
+        `/user/${userId}/property/${propertyId}`,
+        config
       );
       if (response) {
         toast.success("property deleted sucessfully");

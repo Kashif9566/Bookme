@@ -12,6 +12,7 @@ import {
   selectAllReservationsForHost,
 } from "../../../../redux/slice/reservation.slice";
 import RevenueDonutChart from "./RevenueDonutChart";
+import { Doughnut } from "react-chartjs-2";
 
 const Analytics = () => {
   const user = useSelector((state) => state.user);
@@ -21,9 +22,8 @@ const Analytics = () => {
   useEffect(() => {
     dispatch(fetchPropertyForHost(userId));
     dispatch(fetchAllReservationsForHost(userId));
-  }, [dispatch, fetchPropertyForHost, fetchAllReservationsForHost]);
+  }, [dispatch, userId]);
 
-  const loading = useSelector((state) => state.property.isLoading);
   const properties = useSelector(selectPropertiesForHost);
   const reservations = useSelector(selectAllReservationsForHost);
 
@@ -49,6 +49,26 @@ const Analytics = () => {
     }, 0);
   };
   const totalRevenue = calculateTotalRevenue();
+
+  const generateColors = (count) => {
+    const colors = [];
+    for (let i = 0; i < count; i++) {
+      const hue = (i * (360 / count)) % 360;
+      colors.push(`hsl(${hue}, 70%, 60%)`);
+    }
+    return colors;
+  };
+
+  const listingsData = {
+    labels: properties.map((property, index) => `Listing ${index + 1}`),
+    datasets: [
+      {
+        data: properties.map(() => 1),
+        backgroundColor: generateColors(properties.length),
+        hoverBackgroundColor: generateColors(properties.length),
+      },
+    ],
+  };
 
   return (
     <div style={{ backgroundColor: "#fdfcfe" }}>
@@ -81,13 +101,16 @@ const Analytics = () => {
               <Card title={"Revenue"} value={<h4>${totalRevenue}</h4>} />
             </div>
             <div className="row d-flex justify-content-between">
+              <div className="card col-4">
+                <Doughnut data={listingsData} />
+              </div>
               <div className="card col-7">
                 <h4 className="mx-3 mt-3">Reservations Stats</h4>
                 <ReservationsChart reservationsData={reservationsData} />
               </div>
-              <div className="card col-4">
+              {/* <div className="card col-4">
                 <RevenueDonutChart revenueData={totalRevenue} />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

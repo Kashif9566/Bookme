@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../api/api";
@@ -104,92 +104,126 @@ const Signup = () => {
   };
 
   return (
-    <div className="container d-flex align-items-center justify-content-center">
-      <form onSubmit={handleSubmit} className="signup-form">
-        {["username", "email", "password", "confirmpassword", "role"].map(
-          (field) => (
-            <div key={field} className="form-group  mx-2">
-              <label htmlFor={field} className="form-label">
-                <b>{field.charAt(0).toUpperCase() + field.slice(1)}</b>
-                {field === "email" && email && (
-                  <div
-                    style={{
-                      color: emailValid ? "green" : "red",
-                      fontSize: "14px",
-                      marginTop: "5px",
-                    }}
-                  >
-                    {emailValid
-                      ? "Correct email format"
-                      : "Incorrect email format"}
-                  </div>
-                )}
-              </label>
+    <div className="container ">
+      <div className="row justify-content-center align-items-center vh-100">
+        <div className="col-7">
+          <h3 style={{ color: "#ff385d", fontSize: "50px" }}>Bookme.com</h3>
+          <p>
+            Welcome to Bookme!
+            <br /> Whether you're a property owner or a traveler,
+            <br /> our platform connects you with unique accommodations. <br />
+            Find the ideal place for your next adventure.
+          </p>
+        </div>
+        <div className="col-5 card p-3">
+          <form onSubmit={handleSubmit} className="signup-form">
+            {["username", "email", "password", "confirmpassword", "role"].map(
+              (field) => (
+                <div key={field} className="form-group  mx-2">
+                  <label htmlFor={field} className="form-label">
+                    <b>{field.charAt(0).toUpperCase() + field.slice(1)}</b>
+                    {field === "email" && email && (
+                      <div
+                        style={{
+                          color: emailValid ? "green" : "red",
+                          fontSize: "14px",
+                          marginTop: "5px",
+                        }}
+                      >
+                        {emailValid
+                          ? "Correct email format"
+                          : "Incorrect email format"}
+                      </div>
+                    )}
+                  </label>
 
-              {field === "role" ? (
-                <select
-                  className="form-control"
-                  id={field}
-                  name={field}
-                  value={role}
-                  onChange={handleChange}
-                >
-                  <option value="user">User</option>
-                  <option value="host">Host</option>
-                </select>
-              ) : (
-                <div className="input-group">
-                  <input
-                    type={
-                      field.includes("password") && !showPassword
-                        ? "password"
-                        : "text"
-                    }
-                    className="form-control"
-                    id={field}
-                    name={field}
-                    value={formData[field]}
-                    onChange={handleChange}
-                  />
-                  {field.includes("password") && (
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary"
-                      onClick={togglePasswordVisibility}
+                  {field === "role" ? (
+                    <select
+                      className="form-control"
+                      id={field}
+                      name={field}
+                      value={role}
+                      onChange={handleChange}
                     >
-                      <FontAwesomeIcon
-                        icon={showPassword ? faEyeSlash : faEye}
+                      <option value="user">User</option>
+                      <option value="host">Host</option>
+                    </select>
+                  ) : (
+                    <div className="input-group">
+                      <input
+                        type={
+                          field.includes("password") && !showPassword
+                            ? "password"
+                            : "text"
+                        }
+                        className="form-control"
+                        id={field}
+                        name={field}
+                        value={formData[field]}
+                        onChange={handleChange}
                       />
-                    </button>
+                      {field.includes("password") && (
+                        <button
+                          type="button"
+                          className="btn btn-outline-secondary"
+                          onClick={togglePasswordVisibility}
+                        >
+                          <FontAwesomeIcon
+                            icon={showPassword ? faEyeSlash : faEye}
+                          />
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
-              )}
+              )
+            )}
+            <div className="form-group my-2 mx-2">
+              <label htmlFor="image" className="form-label">
+                <b>Image</b>
+              </label>
+              <input
+                type="file"
+                id="image"
+                name="image"
+                accept="image/*"
+                onChange={handleChange}
+                className="input mx-1"
+              />
             </div>
-          )
-        )}
-        <div className="form-group my-2 mx-2">
-          <label htmlFor="image" className="form-label">
-            <b>Image</b>
-          </label>
-          <input
-            type="file"
-            id="image"
-            name="image"
-            accept="image/*"
-            onChange={handleChange}
-            className="input mx-1"
-          />
-        </div>
-        <button
-          type="submit"
-          className="btn btn-secondary btn-block my-2 mx-2"
-          disabled={loading}
-        >
-          {loading ? "Signing up..." : <b>Signup</b>}
-        </button>
-      </form>
+            <button
+              type="submit"
+              className="btn btn-secondary btn-block my-2 mx-2"
+              disabled={loading}
+              style={{ backgroundColor: "#ff385d", border: "white" }}
+            >
+              {loading ? "Signing up..." : <b>Signup</b>}
+            </button>
+          </form>
+          <div
+            style={{
+              marginTop: "20px",
+              fontSize: "14px",
+              color: "#333",
+              textAlign: "center",
+            }}
+          >
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              style={{
+                color: "#ff385d",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+            >
+              Login
+            </Link>
+          </div>
 
-      <ToastContainer />
+          <ToastContainer />
+        </div>
+      </div>
     </div>
   );
 };

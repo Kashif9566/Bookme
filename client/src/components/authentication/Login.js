@@ -24,7 +24,7 @@ const Login = () => {
     e.preventDefault();
     try {
       if (!email || !password) {
-        toast.error("Please provide email and password");
+        toast.error("Please provide email and password", { autoClose: 1000 });
         return;
       }
 
@@ -71,31 +71,85 @@ const Login = () => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center">
-      <form onSubmit={handleSubmit} className="login-form">
-        {["email", "password"].map((field) => (
-          <div key={field} className="form-group" style={{ width: "250px" }}>
-            <label htmlFor={field} className="form-label">
-              <b>{field.charAt(0).toUpperCase() + field.slice(1)}</b>
-            </label>
-            <input
-              type={field === "password" ? "password" : "text"}
-              className="form-control"
-              id={field}
-              name={field}
-              value={formData[field]}
-              onChange={handleChange}
-            />
+    <div className="container">
+      <div className="row justify-content-center align-items-center vh-100">
+        <div className="col-7">
+          <h3 style={{ color: "#ff385d", fontSize: "50px" }}>Bookme.com</h3>
+          <p>
+            Welcome to Bookme!
+            <br /> Whether you're a property owner or a traveler,
+            <br /> our platform connects you with unique accommodations. <br />
+            Find the ideal place for your next adventure.
+          </p>
+        </div>
+        <div className="col-4 card p-3">
+          <form onSubmit={handleSubmit} className="login-form">
+            {["email", "password"].map((field) => (
+              <div
+                key={field}
+                style={{
+                  marginBottom: "1rem",
+                  position: "relative",
+                }}
+              >
+                <label
+                  htmlFor={field}
+                  style={{
+                    position: "absolute",
+                    pointerEvents: "none",
+                    left: "10px",
+                    top: formData[field] ? "0px" : "50%",
+                    transform: formData[field]
+                      ? "translateY(0)"
+                      : "translateY(-50%)",
+                    transition: "top 0.3s, font-size 0.3s",
+                    fontSize: formData[field] ? "12px" : "inherit",
+                    color: formData[field] ? "#ff385d" : "inherit",
+                  }}
+                >
+                  <b>{field.charAt(0).toUpperCase() + field.slice(1)}</b>
+                </label>
+                <input
+                  type={field === "password" ? "password" : "text"}
+                  className="form-control"
+                  id={field}
+                  name={field}
+                  value={formData[field]}
+                  onChange={handleChange}
+                  style={{
+                    width: "100%",
+                    padding: "12px",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    transition: "border-color 0.3s",
+                  }}
+                />
+              </div>
+            ))}
+            <button
+              type="submit"
+              className="btn btn-secondary btn-block m-1"
+              disabled={loading}
+              style={{ backgroundColor: "#ff385d", border: "white" }}
+            >
+              <b>{loading ? "Logging in..." : "Login"}</b>
+            </button>
+          </form>
+          <div style={{ textAlign: "center", marginTop: "1rem" }}>
+            Don't have an account?{" "}
+            <span
+              style={{
+                color: "#ff385d",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+              onClick={() => navigate("/signup")}
+            >
+              Sign up
+            </span>
           </div>
-        ))}
-        <button
-          type="submit"
-          className="btn btn-secondary btn-block my-3"
-          disabled={loading}
-        >
-          <b>{loading ? "Logging in..." : "Login"}</b>
-        </button>
-      </form>
+        </div>
+      </div>
       <ToastContainer />
     </div>
   );
