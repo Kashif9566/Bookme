@@ -37,7 +37,7 @@ export const searchProperty = createAsyncThunk(
 
 export const fetchPropertyForHost = createAsyncThunk(
   "fetchPropertyForHost",
-  async ({ userId }) => {
+  async (userId) => {
     const response = await api.get(`/user/${userId}/property`);
     return response.data;
   }
