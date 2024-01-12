@@ -9,7 +9,10 @@ const reservationRoutes = require("./route/reservation.route");
 const dotenv = require("dotenv");
 
 const corsOptions = {
-  origin: "https://legendary-sable-3090ea.netlify.app",
+  origin: [
+    "https://legendary-sable-3090ea.netlify.app",
+    "https://kaleidoscopic-starburst-4de538.netlify.app",
+  ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
