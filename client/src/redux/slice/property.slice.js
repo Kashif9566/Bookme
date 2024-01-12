@@ -86,14 +86,19 @@ const propertySlice = createSlice({
         state.isError = true;
       })
       .addCase(fetchPropertyForHost.pending, (state) => {
+        console.log("fetchPropertyForHost pending...");
         state.isLoading = true;
+        state.isError = false;
       })
       .addCase(fetchPropertyForHost.fulfilled, (state, action) => {
+        console.log("fetchPropertyForHost fulfilled...");
         state.isLoading = false;
         state.hostProperties = action.payload;
       })
       .addCase(fetchPropertyForHost.rejected, (state) => {
+        console.log("fetchPropertyForHost rejected...");
         state.isError = true;
+        state.isLoading = false;
       });
   },
 });

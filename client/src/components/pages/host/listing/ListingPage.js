@@ -12,25 +12,27 @@ import {
 const ListingPage = () => {
   const user = useSelector((state) => state.user);
   const userId = user.id;
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchPropertyForHost({ userId }));
+    dispatch(fetchPropertyForHost(userId));
   }, [dispatch, userId]);
 
   const loading = useSelector((state) => state.property.isLoading);
   const properties = useSelector(selectPropertiesForHost);
 
   const handlePropertyDeleted = () => {
-    dispatch(fetchPropertyForHost({ userId }));
+    dispatch(fetchPropertyForHost(userId));
   };
 
   return (
     <div className="row">
       <div className="col-md-12">
         <Nav />
-        {loading && <Loader />}
-        {!loading && (
+        {loading ? (
+          <Loader />
+        ) : (
           <div className="container">
             <div>
               <div className="d-flex justify-content-between align-items-center mx-2 my-4">
@@ -39,9 +41,13 @@ const ListingPage = () => {
                     Your listings
                   </span>
                   <span style={{ fontSize: "20px", fontWeight: "400" }}>
-                    {properties.length > 0
-                      ? `You have ${properties.length} property listings`
-                      : "You don't have any property listings yet"}
+                    {loading
+                      ? "Loading..."
+                      : properties.length === 1
+                      ? "You have 1 property listing"
+                      : properties.length === 0
+                      ? "You don't have any property listings yet"
+                      : `You have ${properties.length} property listings`}
                   </span>
                 </div>
 
@@ -54,20 +60,16 @@ const ListingPage = () => {
                 </Link>
               </div>
               <div className="container">
-                {properties.length > 0 ? (
-                  <div className="row">
-                    {properties.map(({ id, ...rest }) => (
-                      <div key={id} className="col-md-4 ">
-                        <ListingModel
-                          property={rest}
-                          onPropertyDeleted={handlePropertyDeleted}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p>You don't have any property listings yet.</p>
-                )}
+                <div className="row">
+                  {properties.map((property) => (
+                    <div key={property.id} className="col-md-4 ">
+                      <ListingModel
+                        property={property}
+                        onPropertyDeleted={handlePropertyDeleted}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
