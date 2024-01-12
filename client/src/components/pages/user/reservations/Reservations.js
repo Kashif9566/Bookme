@@ -12,6 +12,7 @@ const Reservations = () => {
   const [reservations, setReservations] = useState([]);
   const user = useSelector((state) => state.user);
   const userId = user.id;
+  const token = user.token;
 
   const formatDate = (dateString) => {
     const options = { month: "long", day: "numeric", year: "numeric" };
@@ -20,14 +21,19 @@ const Reservations = () => {
 
   const fetchReservations = useCallback(async () => {
     try {
-      const response = await api.get(`/user/${userId}/reservation`);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await api.get(`/user/${userId}/reservation`, config);
       setReservations(response.data);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
       setIsLoading(false);
     }
-  }, [userId]);
+  }, [userId, token]);
 
   useEffect(() => {
     fetchReservations();
@@ -35,8 +41,14 @@ const Reservations = () => {
 
   const cancelReservation = async (reservationId) => {
     try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
       const response = await api.delete(
-        `/user/${userId}/reservation/${reservationId}`
+        `/user/${userId}/reservation/${reservationId}`,
+        config
       );
       if (response.status === 200) {
         toast.success("Reservation Cancelled", { autoClose: 1000 });
@@ -53,7 +65,7 @@ const Reservations = () => {
         <Loader />
       ) : (
         <div className="row">
-          <div className="col-12">
+          <div className="col-md-12">
             <Nav />
             <div className="container">
               <div className="d-flex flex-column justify-content-center align-items-center mt-3">

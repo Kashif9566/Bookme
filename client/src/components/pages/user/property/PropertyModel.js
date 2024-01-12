@@ -7,7 +7,7 @@ import api from "../../../../api/api";
 import LazyLoad from "react-lazyload";
 
 const PropertyModel = ({ property }) => {
-  const reviewsLength = property.Reviews.length;
+  const reviewsLength = property.Reviews?.length || 0;
   const reviews = property.Reviews;
   const totalRating = calculateTotalRating(reviews);
 

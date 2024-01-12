@@ -3,17 +3,26 @@ import Nav from "../layout/Nav";
 import { useParams } from "react-router-dom";
 import Loader from "../../../Loader";
 import api from "../../../../api/api";
+import { useSelector } from "react-redux";
 
 const ReservationPage = () => {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
   const { propertyId } = useParams();
+  const user = useSelector((state) => state.user);
+  const token = user.token;
 
   const fetchReservations = useCallback(async () => {
     try {
       setLoading(true);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
       const { data } = await api.get(
-        `/host/property/${propertyId}/reservation`
+        `/host/property/${propertyId}/reservation`,
+        config
       );
       if (data) {
         setReservations(data);
@@ -23,7 +32,7 @@ const ReservationPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [propertyId]);
+  }, [propertyId, token]);
 
   useEffect(() => {
     fetchReservations();
@@ -31,7 +40,7 @@ const ReservationPage = () => {
 
   return (
     <div className="row">
-      <div className="col-12">
+      <div className="col-md-12">
         <Nav />
         <div className="container mt-4">
           <h2 className="my-3">Reservations</h2>
@@ -47,7 +56,7 @@ const ReservationPage = () => {
             <Loader />
           ) : (
             <div className="table-responsive mt-4">
-              <table className="table table-bordered">
+              <table className="table table-bordered table-striped">
                 <thead>
                   <tr>
                     <th>Guests</th>

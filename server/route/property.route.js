@@ -7,13 +7,18 @@ const { protect } = require("../middleware/authMiddleware");
 router.post(
   "/user/:userId/property",
   upload.single("image"),
+  protect,
   property.createProperty
 );
 router.get("/allProperties", property.getProperties);
 router.get("/user/:userId/property", property.getPropertiesForUser);
 router.get("/property/:propertyId", property.getPropertyById);
-router.delete("/user/:userId/property/:propertyId", property.deleteProperty);
+router.delete(
+  "/user/:userId/property/:propertyId",
+  protect,
+  property.deleteProperty
+);
 router.get("/search", property.searchProperty);
-router.put("/property/:propertyId", property.editProperty);
+router.put("/property/:propertyId", protect, property.editProperty);
 
 module.exports = router;

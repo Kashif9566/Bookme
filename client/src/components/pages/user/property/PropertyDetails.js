@@ -56,7 +56,11 @@ const PropertyDetails = () => {
   const calculatedNumNights = calculateNumNights(checkIn, checkOut);
 
   if (!property) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
   }
   if (!property.price) {
     return <div>Error: Property price is not available.</div>;
@@ -83,13 +87,16 @@ const PropertyDetails = () => {
         setCheckIn("");
         setCheckOut("");
         setGuests("");
-        toast.success("You request to reservation has submitted successfully!");
+        toast.success(
+          "You request to reservation has submitted successfully!",
+          { autoClose: 1000 }
+        );
       } else {
-        toast.error("Error requesting reservation");
+        toast.error("Error requesting reservation", { autoClose: 1000 });
       }
     } catch (error) {
       console.log(error);
-      toast.error("Error requesting reservation:", error);
+      toast.error("Error requesting reservation:", error, { autoClose: 1000 });
     }
   };
   return (
@@ -401,11 +408,12 @@ const PropertyDetails = () => {
                   </div>
                 </div>
                 <hr />
-                <Reviews property={property} />
+                <div className="container">
+                  <Reviews property={property} />
+                </div>
               </div>
             )}
           </div>
-
           <ToastContainer />
         </div>
       )}

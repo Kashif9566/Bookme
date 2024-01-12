@@ -10,18 +10,19 @@ import {
 const AllReservations = () => {
   const user = useSelector((state) => state.user);
   const userId = user.id;
+  const token = user.token;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchAllReservationsForHost(userId));
-  }, [dispatch, userId]);
+    dispatch(fetchAllReservationsForHost({ userId, token }));
+  }, [dispatch, userId, token]);
 
   const loading = useSelector((state) => state.reservation.isLoading);
   const reservations = useSelector(selectAllReservationsForHost);
 
   return (
     <div className="row">
-      <div className="col-12">
+      <div className="col-md-12">
         <Nav />
         <div className="container mt-4">
           <h2 className="my-3">Reservations</h2>
@@ -37,7 +38,7 @@ const AllReservations = () => {
             <Loader />
           ) : (
             <div className="table-responsive mt-4">
-              <table className="table table-bordered">
+              <table className="table table-bordered table-striped">
                 <thead>
                   <tr>
                     <th>Guests</th>

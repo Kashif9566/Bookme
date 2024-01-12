@@ -16,6 +16,7 @@ const Reviews = ({ property }) => {
   const [rating, setRating] = useState("");
   const user = useSelector((state) => state.user);
   const userId = user.id;
+  const token = user.token;
   const propertyId = property.id;
   const dispatch = useDispatch();
   const isSubmitDisabled = !content || !rating;
@@ -30,11 +31,20 @@ const Reviews = ({ property }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post(`/property/${propertyId}`, {
-        content,
-        rating,
-        userId,
-      });
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await api.post(
+        `/property/${propertyId}`,
+        {
+          content,
+          rating,
+          userId,
+        },
+        config
+      );
       if (response.data) {
         toast.success("Review submitted successfully", { autoClose: 1000 });
         dispatch(fetchReviews({ propertyId }));

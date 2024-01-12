@@ -12,17 +12,18 @@ import {
 const ListingPage = () => {
   const user = useSelector((state) => state.user);
   const userId = user.id;
+  const token = user.token;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchPropertyForHost(userId));
-  }, [dispatch, userId]);
+    dispatch(fetchPropertyForHost({ userId, token }));
+  }, [dispatch, userId, token]);
 
   const loading = useSelector((state) => state.property.isLoading);
   const properties = useSelector(selectPropertiesForHost);
 
   const handlePropertyDeleted = () => {
-    dispatch(fetchPropertyForHost(userId));
+    dispatch(fetchPropertyForHost({ userId, token }));
   };
 
   return (

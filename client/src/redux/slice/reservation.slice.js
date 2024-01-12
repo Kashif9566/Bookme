@@ -10,8 +10,13 @@ const initialState = {
 
 export const fetchAllReservationsForHost = createAsyncThunk(
   "fetchAllReservationsForHost",
-  async (userId) => {
-    const response = await api.get(`/host/${userId}/reservations`);
+  async ({ userId, token }) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await api.get(`/host/${userId}/reservations`, config);
     return response.data;
   }
 );

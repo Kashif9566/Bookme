@@ -73,8 +73,8 @@ const Login = () => {
   return (
     <div className="container">
       <div className="row justify-content-center align-items-center vh-100">
-        <div className="col-7">
-          <h3 style={{ color: "#ff385d", fontSize: "50px" }}>Bookme.com</h3>
+        <div className="col-md-7">
+          <h3 style={{ color: "#ff385d", fontSize: "40px" }}>Bookme.com</h3>
           <p>
             Welcome to Bookme!
             <br /> Whether you're a property owner or a traveler,
@@ -82,7 +82,7 @@ const Login = () => {
             Find the ideal place for your next adventure.
           </p>
         </div>
-        <div className="col-4 card p-3">
+        <div className="col-md-4 card p-3">
           <form onSubmit={handleSubmit} className="login-form">
             {["email", "password"].map((field) => (
               <div

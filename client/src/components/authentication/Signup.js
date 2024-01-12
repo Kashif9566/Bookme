@@ -106,7 +106,7 @@ const Signup = () => {
   return (
     <div className="container ">
       <div className="row justify-content-center align-items-center vh-100">
-        <div className="col-7">
+        <div className="col-md-7">
           <h3 style={{ color: "#ff385d", fontSize: "50px" }}>Bookme.com</h3>
           <p>
             Welcome to Bookme!
@@ -115,7 +115,7 @@ const Signup = () => {
             Find the ideal place for your next adventure.
           </p>
         </div>
-        <div className="col-5 card p-3">
+        <div className="col-md-5 card p-3">
           <form onSubmit={handleSubmit} className="signup-form">
             {["username", "email", "password", "confirmpassword", "role"].map(
               (field) => (

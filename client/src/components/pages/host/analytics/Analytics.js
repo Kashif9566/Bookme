@@ -73,7 +73,7 @@ const Analytics = () => {
   return (
     <div style={{ backgroundColor: "#fdfcfe" }}>
       <div className="row">
-        <div className="col-12">
+        <div className="col-md-12">
           <Nav />
           <div className="container">
             <h2 className="my-2">Analytics</h2>
@@ -101,7 +101,7 @@ const Analytics = () => {
               <Card title={"Revenue"} value={<h4>${totalRevenue}</h4>} />
             </div>
             <div className="row d-flex justify-content-between">
-              <div className="card col-4">
+              <div className="card col-md-4">
                 {hasListingsData ? (
                   <Doughnut data={listingsData} />
                 ) : (
@@ -117,7 +117,7 @@ const Analytics = () => {
                   </p>
                 )}
               </div>
-              <div className="card col-7">
+              <div className="card col-md-7 mt-2">
                 <h4 className="mx-3 mt-3">Reservations Stats</h4>
                 <ReservationsChart reservationsData={reservationsData} />
               </div>
