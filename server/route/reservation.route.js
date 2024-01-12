@@ -10,19 +10,10 @@ router.post(
 );
 router.get(
   "/host/property/:propertyId/reservation",
-  protect,
   reservation.getReservationsForProperty
 );
-router.get(
-  "/host/:hostId/reservations",
-  protect,
-  reservation.getReservationsForHost
-);
-router.get(
-  "/user/:userId/reservation",
-  protect,
-  reservation.getReservationsForUser
-);
+router.get("/host/:hostId/reservations", reservation.getReservationsForHost);
+router.get("/user/:userId/reservation", reservation.getReservationsForUser);
 router.delete(
   "/user/:userId/reservation/:reservationId",
   protect,
