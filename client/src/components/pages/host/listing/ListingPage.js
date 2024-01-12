@@ -16,8 +16,8 @@ const ListingPage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchPropertyForHost({ userId, token }));
-  }, [dispatch, userId, token]);
+    dispatch(fetchPropertyForHost({ userId }));
+  }, [dispatch, userId]);
 
   const loading = useSelector((state) => state.property.isLoading);
   const properties = useSelector(selectPropertiesForHost);
