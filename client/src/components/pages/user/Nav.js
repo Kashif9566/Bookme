@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearUser } from "../../../redux/slice/user.slice";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { searchProperty } from "../../../redux/slice/property.slice";
-import api from "../../../api/api";
+import ProfileCard from "../host/layout/ProfileCard";
 
 const Nav = () => {
   const user = useSelector((state) => state.user);
@@ -34,6 +34,23 @@ const Nav = () => {
   const toggleProfileCard = () => {
     setShowProfileCard(!showProfileCard);
   };
+
+  const profileButtonRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileButtonRef.current &&
+        !profileButtonRef.current.contains(event.target) &&
+        !event.target.closest(".profile-card")
+      ) {
+        setShowProfileCard(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div>
@@ -117,6 +134,7 @@ const Nav = () => {
                   href="#"
                   style={{ marginLeft: "auto" }}
                   onClick={toggleProfileCard}
+                  ref={profileButtonRef}
                 >
                   <img
                     src={avatarSrc}
@@ -136,58 +154,11 @@ const Nav = () => {
         </div>
       </nav>
       {showProfileCard && (
-        <div
-          className="card p-3 m-3"
-          style={{
-            position: "absolute",
-            top: "60px",
-            right: "10px",
-            zIndex: 1000,
-          }}
-        >
-          <div className="d-flex">
-            {user.image ? (
-              <img
-                src={`${api.defaults.baseURL}/${user.image}`}
-                alt={`Profile of ${user.username}`}
-                style={{
-                  width: "100px",
-                  height: "100px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  color: "#ff385d",
-                }}
-              />
-            ) : (
-              <img
-                src={avatarSrc}
-                alt="Profile Avatar"
-                style={{
-                  width: "45px",
-                  height: "45px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  color: "#ff385d",
-                }}
-              />
-            )}
-
-            <div className="d-flex flex-column align-items-center mx-3 mt-3">
-              <p style={{ fontSize: "20px", fontWeight: 600 }}>
-                {user?.username}
-              </p>
-              <p>{user?.email}</p>
-            </div>
-          </div>
-
-          <hr />
-          <button
-            className="btn btn-outline-dark rounded-pill mx-2"
-            onClick={user ? handleLogout : handleNotLogin}
-          >
-            {user ? "Logout" : "Login"}
-          </button>
-        </div>
+        <ProfileCard
+          user={user}
+          avatarSrc={avatarSrc}
+          handleLogout={handleLogout}
+        />
       )}
     </div>
   );

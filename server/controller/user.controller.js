@@ -1,48 +1,74 @@
 const User = require("../model/user.model");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../config/jwt");
+const cloudinary = require("../config/cloudinary.config");
 
 exports.createUser = async (req, res) => {
   const { username, email, password, role } = req.body;
-  const image = req.file ? req.file.path : null;
 
   try {
     if (!username || !email || !password) {
       console.error("Validation Error:", { username, email, password });
-      res.status(400).json({ error: "Please provide all required fields" });
-      return;
+      return res
+        .status(400)
+        .json({ error: "Please provide all required fields" });
     }
 
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      res.status(400).json({ error: "User with this email already exists" });
-      return;
+      return res
+        .status(400)
+        .json({ error: "User with this email already exists" });
+    }
+
+    let imageUrl = null;
+    if (req.file) {
+      const uploadResult = await uploadToCloudinary(req.file);
+      imageUrl = uploadResult.secure_url;
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = await User.create({
       username,
       email,
       password: hashedPassword,
       role: role || "user",
-      image,
+      image: imageUrl,
     });
 
     if (newUser) {
-      res.status(201).json({
+      return res.status(201).json({
         id: newUser.id,
         username: newUser.username,
         email: newUser.email,
-        image: image,
+        image: imageUrl,
         role: newUser.role,
         token: generateToken(newUser.id),
       });
     } else {
-      res.status(400).json({ error: "Failed to create user" });
+      return res.status(500).json({ error: "Failed to create user" });
     }
   } catch (error) {
-    res.status(400).send(error);
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
+};
+
+const uploadToCloudinary = (file) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(file.path, (err, result) => {
+      if (err) {
+        console.log(err);
+        reject({
+          success: false,
+          message: "Error uploading image to Cloudinary",
+        });
+      } else {
+        resolve(result);
+      }
+    });
+  });
 };
 
 exports.login = async (req, res) => {

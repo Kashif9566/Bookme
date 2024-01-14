@@ -46,7 +46,7 @@ const ListingModel = ({ property, onPropertyDeleted }) => {
         <div className="card">
           <div>
             <img
-              src={`${api.defaults.baseURL}/${property.image}`}
+              src={`${property.image}`}
               className="card-img-top"
               alt={`${property.name}`}
               style={{

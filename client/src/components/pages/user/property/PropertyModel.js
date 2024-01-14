@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { calculateTotalRating } from "../../../helper/Helpers";
-import api from "../../../../api/api";
 import LazyLoad from "react-lazyload";
 
 const PropertyModel = ({ property }) => {
@@ -21,7 +20,7 @@ const PropertyModel = ({ property }) => {
           <div>
             <LazyLoad height={240}>
               <img
-                src={`${api.defaults.baseURL}/${property.image}`}
+                src={`${property.image}`}
                 className="card-img-top"
                 alt={`${property.name}`}
                 style={{

@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearUser } from "../../../../redux/slice/user.slice";
-import { useState } from "react";
-import api from "../../../../api/api";
+import { useState, useRef, useEffect } from "react";
+import ProfileCard from "./ProfileCard";
 
 const Nav = () => {
   const user = useSelector((state) => state.user);
@@ -18,16 +18,28 @@ const Nav = () => {
     navigate("/login");
   };
 
-  const handleNotLogin = () => {
-    navigate("/login");
-  };
-
   const avatarSrc = `https://ui-avatars.com/api/?name=${user?.username}&size=40`;
 
   const toggleProfileCard = () => {
     setShowProfileCard(!showProfileCard);
   };
 
+  const profileButtonRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileButtonRef.current &&
+        !profileButtonRef.current.contains(event.target) &&
+        !event.target.closest(".profile-card")
+      ) {
+        setShowProfileCard(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
   return (
     <div>
       <nav className="navbar shadow navbar-expand-lg bg-body-tertiary">
@@ -63,7 +75,7 @@ const Nav = () => {
           </div>
 
           <div className={`collapse navbar-collapse ${menuOpen ? "show" : ""}`}>
-            <ul className="navbar-nav ml-auto d-flex align-items-center">
+            <ul className="host-navbar navbar-nav ml-auto d-flex align-items-center">
               <li className="nav-item">
                 <a
                   className="nav-link"
@@ -102,20 +114,10 @@ const Nav = () => {
               <hr className="w-75 mx-0 my-1" />
               <li className="nav-item">
                 <button
-                  className="nav-link"
-                  onClick={user ? handleLogout : handleNotLogin}
-                >
-                  {user ? "Logout" : "Login"}
-                </button>
-              </li>
-              <hr className="w-75 mx-0 my-1" />
-
-              <li className="nav-item">
-                <button
                   className="btn btn-link"
-                  href="#"
                   style={{ marginLeft: "auto" }}
                   onClick={toggleProfileCard}
+                  ref={profileButtonRef}
                 >
                   <img
                     src={avatarSrc}
@@ -135,58 +137,11 @@ const Nav = () => {
         </div>
       </nav>
       {showProfileCard && (
-        <div
-          className="card p-3 m-3"
-          style={{
-            position: "absolute",
-            top: "60px",
-            right: "10px",
-            zIndex: 1000,
-          }}
-        >
-          <div className="d-flex">
-            {user.image ? (
-              <img
-                src={`${api.defaults.baseURL}/${user.image}`}
-                alt={`Profile of ${user.username}`}
-                style={{
-                  width: "100px",
-                  height: "100px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  color: "#ff385d",
-                }}
-              />
-            ) : (
-              <img
-                src={avatarSrc}
-                alt="Profile Avatar"
-                style={{
-                  width: "45px",
-                  height: "45px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  color: "#ff385d",
-                }}
-              />
-            )}
-
-            <div className="d-flex flex-column align-items-center mx-3 mt-3">
-              <p style={{ fontSize: "20px", fontWeight: 600 }}>
-                {user?.username}
-              </p>
-              <p>{user?.email}</p>
-            </div>
-          </div>
-
-          <hr />
-          <button
-            className="btn btn-outline-dark rounded-pill mx-2"
-            onClick={user ? handleLogout : handleNotLogin}
-          >
-            {user ? "Logout" : "Login"}
-          </button>
-        </div>
+        <ProfileCard
+          user={user}
+          avatarSrc={avatarSrc}
+          handleLogout={handleLogout}
+        />
       )}
     </div>
   );

@@ -79,7 +79,6 @@ const Signup = () => {
           image: null,
           loading: false,
         });
-        console.log(response.data);
         toast.success("Account created successfully!", { autoClose: 1000 });
         localStorage.setItem("userInfo", JSON.stringify(response.data));
         navigate("/login");

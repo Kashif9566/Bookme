@@ -114,7 +114,7 @@ const Reviews = ({ property }) => {
                       height: "50px",
                       borderRadius: "50%",
                     }}
-                    src={`${api.defaults.baseURL}/${review.User.image}`}
+                    src={`${review.User.image}`}
                     alt="User Avatar"
                   />
                 ) : (

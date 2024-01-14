@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const property = require("../controller/property.controller");
-const upload = require("../config/multer.config");
+const upload = require("../middleware/multerMiddleware");
 
 router.post(
   "/user/:userId/property",

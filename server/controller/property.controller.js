@@ -2,6 +2,7 @@ const Property = require("../model/property.model");
 const User = require("../model/user.model");
 const Review = require("../model/review.model");
 const { Op } = require("sequelize");
+const cloudinary = require("../config/cloudinary.config");
 
 exports.createProperty = async (req, res) => {
   const {
@@ -22,6 +23,27 @@ exports.createProperty = async (req, res) => {
   const userId = req.params.userId;
 
   try {
+    if (!title || !description || !price) {
+      console.error("Validation Error:", { title, description, price });
+      return res
+        .status(400)
+        .json({ error: "Please provide all required fields" });
+    }
+
+    let imageUrl = null;
+
+    if (image) {
+      try {
+        const result = await uploadToCloudinary(image);
+        imageUrl = result.secure_url;
+      } catch (cloudinaryError) {
+        console.error(cloudinaryError);
+        return res.status(500).json({
+          success: false,
+          message: "Error uploading image to Cloudinary",
+        });
+      }
+    }
     const newProperty = await Property.create({
       address,
       city,
@@ -33,7 +55,7 @@ exports.createProperty = async (req, res) => {
       rooms,
       bed,
       bathroom,
-      image,
+      image: imageUrl,
       province,
       UserId: userId,
     });
@@ -55,6 +77,22 @@ exports.createProperty = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+};
+
+const uploadToCloudinary = (filePath) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(filePath, (err, result) => {
+      if (err) {
+        console.log(err);
+        reject({
+          success: false,
+          message: "Error uploading image to Cloudinary",
+        });
+      } else {
+        resolve(result);
+      }
+    });
+  });
 };
 
 exports.getProperties = async (req, res) => {
