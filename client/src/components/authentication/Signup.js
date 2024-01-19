@@ -1,105 +1,66 @@
-import React, { useState } from "react";
+import React from "react";
+import { useFormik } from "formik";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../api/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { validationSchema } from "../schemas/UserSchema";
 
 const Signup = () => {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmpassword: "",
-    role: "user",
-    image: null,
-    loading: false,
-    showPassword: false,
-  });
-  const [emailValid, setEmailValid] = useState(true);
-  const {
-    username,
-    email,
-    password,
-    confirmpassword,
-    role,
-    image,
-    loading,
-    showPassword,
-  } = formData;
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmpassword: "",
+      role: "user",
+      image: null,
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      values.isSubmitting = true;
+      try {
+        if (values.password !== values.confirmpassword) {
+          toast.error("Passwords do not match", { autoClose: 1000 });
+          return;
+        }
 
-    if (name === "email") {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      setEmailValid(emailRegex.test(value));
-    }
+        const form = new FormData();
+        form.append("username", values.username);
+        form.append("email", values.email);
+        form.append("password", values.password);
+        form.append("role", values.role);
+        if (values.image) {
+          form.append("image", values.image);
+        } else {
+          form.append("image", "");
+        }
 
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: name === "image" ? files[0] : value,
-    }));
-  };
+        const config = { headers: { "Content-Type": "multipart/form-data" } };
+        const response = await api.post("/user/register", form, config);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (!username || !email || !password || !confirmpassword) {
-        toast.error("Please provide all fields", { autoClose: 1000 });
-        return;
+        if (response.status === 201) {
+          toast.success("Account created successfully!", { autoClose: 1000 });
+          localStorage.setItem("userInfo", JSON.stringify(response.data));
+          navigate("/login");
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 400) {
+          toast.error("User already exists", { autoClose: 1000 });
+        } else {
+          console.error(error);
+          toast.error("Error creating Account", { autoClose: 1000 });
+        }
       }
-
-      if (password !== confirmpassword) {
-        toast.error("Passwords do not match", { autoClose: 1000 });
-        return;
-      }
-
-      setFormData((prevFormData) => ({ ...prevFormData, loading: true }));
-
-      const form = new FormData();
-      form.append("username", username);
-      form.append("email", email);
-      form.append("password", password);
-      form.append("role", role);
-      form.append("image", image);
-
-      const config = { headers: { "Content-Type": "multipart/form-data" } };
-      const response = await api.post("/user/register", form, config);
-
-      if (response.status === 201) {
-        setFormData({
-          username: "",
-          email: "",
-          password: "",
-          confirmpassword: "",
-          role: "user",
-          image: null,
-          loading: false,
-        });
-        toast.success("Account created successfully!", { autoClose: 1000 });
-        localStorage.setItem("userInfo", JSON.stringify(response.data));
-        navigate("/login");
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 400) {
-        toast.error("User already exists", { autoClose: 1000 });
-      } else {
-        console.error(error);
-        toast.error("Error creating Account", { autoClose: 1000 });
-      }
-    } finally {
-      setFormData((prevFormData) => ({ ...prevFormData, loading: false }));
-    }
-  };
+    },
+  });
 
   const togglePasswordVisibility = () => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      showPassword: !prevFormData.showPassword,
-    }));
+    formik.setFieldValue("showPassword", !formik.values.showPassword);
   };
 
   return (
@@ -115,23 +76,21 @@ const Signup = () => {
           </p>
         </div>
         <div className="col-md-5 card p-3">
-          <form onSubmit={handleSubmit} className="signup-form">
+          <form onSubmit={formik.handleSubmit} className="signup-form">
             {["username", "email", "password", "confirmpassword", "role"].map(
               (field) => (
                 <div key={field} className="form-group  mx-2">
                   <label htmlFor={field} className="form-label">
                     <b>{field.charAt(0).toUpperCase() + field.slice(1)}</b>
-                    {field === "email" && email && (
+                    {field === "email" && formik.values.email && (
                       <div
                         style={{
-                          color: emailValid ? "green" : "red",
+                          color: formik.errors.email ? "red" : "green",
                           fontSize: "14px",
                           marginTop: "5px",
                         }}
                       >
-                        {emailValid
-                          ? "Correct email format"
-                          : "Incorrect email format"}
+                        {formik.errors.email || "Correct email format"}
                       </div>
                     )}
                   </label>
@@ -141,8 +100,9 @@ const Signup = () => {
                       className="form-control"
                       id={field}
                       name={field}
-                      value={role}
-                      onChange={handleChange}
+                      value={formik.values.role}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                     >
                       <option value="user">User</option>
                       <option value="host">Host</option>
@@ -151,15 +111,17 @@ const Signup = () => {
                     <div className="input-group">
                       <input
                         type={
-                          field.includes("password") && !showPassword
+                          field.includes("password") &&
+                          !formik.values.showPassword
                             ? "password"
                             : "text"
                         }
                         className="form-control"
                         id={field}
                         name={field}
-                        value={formData[field]}
-                        onChange={handleChange}
+                        value={formik.values[field] || ""}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                       />
                       {field.includes("password") && (
                         <button
@@ -168,11 +130,16 @@ const Signup = () => {
                           onClick={togglePasswordVisibility}
                         >
                           <FontAwesomeIcon
-                            icon={showPassword ? faEyeSlash : faEye}
+                            icon={
+                              formik.values.showPassword ? faEyeSlash : faEye
+                            }
                           />
                         </button>
                       )}
                     </div>
+                  )}
+                  {formik.touched[field] && formik.errors[field] && (
+                    <div className="error-message">{formik.errors[field]}</div>
                   )}
                 </div>
               )
@@ -186,17 +153,24 @@ const Signup = () => {
                 id="image"
                 name="image"
                 accept="image/*"
-                onChange={handleChange}
+                onChange={(event) => {
+                  formik.setFieldValue(
+                    "image",
+                    event.currentTarget.files.length > 0
+                      ? event.currentTarget.files[0]
+                      : undefined
+                  );
+                }}
                 className="input mx-1"
+                value=""
               />
             </div>
             <button
               type="submit"
               className="btn btn-secondary btn-block my-2 mx-2"
-              disabled={loading}
               style={{ backgroundColor: "#ff385d", border: "white" }}
             >
-              {loading ? "Signing up..." : <b>Signup</b>}
+              {formik.isSubmitting ? "Signing up..." : <b>Signup</b>}
             </button>
           </form>
           <div

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Loader from "../../../Loader";
-import Nav from "../Nav";
+import Nav from "../layout/UserNav";
 import api from "../../../../api/api";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
@@ -115,13 +115,48 @@ const Reservations = () => {
                                 : "N/A"}
                             </td>
                             <td>
-                              <div
+                              <button
+                                type="button"
                                 className="btn btn-danger"
-                                onClick={() =>
-                                  cancelReservation(reservation.id)
-                                }
+                                data-bs-toggle="modal"
+                                data-bs-target={`#exampleModal${reservation.id}`}
                               >
                                 Cancel Reservation
+                              </button>
+                              <div
+                                className="modal fade"
+                                id={`exampleModal${reservation.id}`}
+                                tabIndex="-1"
+                                aria-labelledby={`exampleModalLabel${reservation.id}`}
+                                aria-hidden="true"
+                              >
+                                <div className="modal-dialog">
+                                  <div className="modal-content">
+                                    <div className="modal-body">
+                                      <h6>
+                                        Are you sure to cancel your reservation?
+                                      </h6>
+                                    </div>
+                                    <div className="modal-footer">
+                                      <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                      >
+                                        Close
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="btn btn-danger"
+                                        onClick={() =>
+                                          cancelReservation(reservation.id)
+                                        }
+                                      >
+                                        Yes
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </td>
                           </tr>

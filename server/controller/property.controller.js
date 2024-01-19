@@ -79,21 +79,21 @@ exports.createProperty = async (req, res) => {
   }
 };
 
-const uploadToCloudinary = (filePath) => {
-  return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload(filePath, (err, result) => {
-      if (err) {
-        console.log(err);
-        reject({
-          success: false,
-          message: "Error uploading image to Cloudinary",
-        });
-      } else {
-        resolve(result);
-      }
-    });
-  });
-};
+// const uploadToCloudinary = (filePath) => {
+//   return new Promise((resolve, reject) => {
+//     cloudinary.uploader.upload(filePath, (err, result) => {
+//       if (err) {
+//         console.log(err);
+//         reject({
+//           success: false,
+//           message: "Error uploading image to Cloudinary",
+//         });
+//       } else {
+//         resolve(result);
+//       }
+//     });
+//   });
+// };
 
 exports.getProperties = async (req, res) => {
   try {
@@ -193,22 +193,6 @@ exports.searchProperty = async (req, res) => {
   }
 };
 
-exports.editProperty = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const [updatedRowsCount] = await Property.update(req.body, {
-      where: { id },
-    });
-    if (updatedRowsCount === 0) {
-      res.status(404).json({ error: "Property not found" });
-      return;
-    }
-    res.status(200).json({ message: "Property updated successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error updating property" });
-  }
-};
 exports.getPropertiesForUser = async (req, res) => {
   const userId = req.params.userId;
   try {
@@ -227,4 +211,109 @@ exports.getPropertiesForUser = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+};
+
+exports.editProperty = async (req, res) => {
+  const {
+    address,
+    city,
+    town,
+    title,
+    description,
+    tagLine,
+    price,
+    rooms,
+    bed,
+    bathroom,
+    province,
+  } = req.body;
+
+  const image = req.file ? req.file.path : null;
+  const propertyId = req.params.propertyId;
+
+  try {
+    if (!title || !description || !price) {
+      console.error("Validation Error:", { title, description, price });
+      return res
+        .status(400)
+        .json({ error: "Please provide all required fields" });
+    }
+
+    let imageUrl = null;
+
+    if (image) {
+      try {
+        const result = await uploadToCloudinary(image);
+        imageUrl = result.secure_url;
+      } catch (cloudinaryError) {
+        console.error(cloudinaryError);
+        return res.status(500).json({
+          success: false,
+          message: "Error uploading image to Cloudinary",
+        });
+      }
+    }
+
+    const updatedProperty = await Property.update(
+      {
+        address,
+        city,
+        town,
+        title,
+        description,
+        tagLine,
+        price,
+        rooms,
+        bed,
+        bathroom,
+        image: imageUrl,
+        province,
+      },
+      {
+        where: { id: propertyId },
+        returning: true,
+      }
+    );
+
+    if (updatedProperty[0] === 0) {
+      return res.status(404).json({ error: "Property not found" });
+    }
+
+    const updatedPropertyDetails = updatedProperty[1][0];
+    const propertyWithDetails = await Property.findByPk(
+      updatedPropertyDetails.id,
+      {
+        include: [
+          {
+            model: User,
+            attributes: ["id", "username", "email"],
+          },
+          {
+            model: Review,
+          },
+        ],
+      }
+    );
+
+    res.status(200).json(propertyWithDetails);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const uploadToCloudinary = (filePath) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(filePath, (err, result) => {
+      if (err) {
+        console.log(err);
+        reject({
+          success: false,
+          message: "Error uploading image to Cloudinary",
+        });
+      } else {
+        resolve(result);
+      }
+    });
+  });
 };

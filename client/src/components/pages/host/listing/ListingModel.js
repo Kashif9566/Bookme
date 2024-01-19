@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -9,6 +9,9 @@ const ListingModel = ({ property, onPropertyDeleted }) => {
   const user = useSelector((state) => state.user);
   const token = user.token;
   const userId = user.id;
+
+  const [showOptions, setShowOptions] = useState(false);
+
   const handleDelete = async (propertyId) => {
     try {
       const config = {
@@ -40,10 +43,73 @@ const ListingModel = ({ property, onPropertyDeleted }) => {
     }
   };
 
+  const optionsRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (optionsRef.current && !optionsRef.current.contains(event.target)) {
+        setShowOptions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    const tooltipTriggerList = [].slice.call(
+      document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    );
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new window.bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+
+      tooltipList.forEach((tooltip) => {
+        tooltip.dispose();
+      });
+    };
+  }, [optionsRef]);
+
   return (
     <div>
       <div className="d-flex flex-column justify-content-between">
-        <div className="card">
+        <div className="card position-relative" ref={optionsRef}>
+          <div
+            className="position-absolute top-0 start-0 m-3"
+            style={{ cursor: "pointer" }}
+          >
+            <span
+              className="text-light"
+              onClick={() => setShowOptions(!showOptions)}
+              style={{ fontSize: "25px", fontWeight: "bold" }}
+              data-bs-toggle="tooltip"
+              data-bs-placement="right"
+              title="Edit your listing"
+            >
+              &#8942;
+            </span>
+            {showOptions && (
+              <div
+                className="bg-light p-2 rounded shadow"
+                style={{ position: "absolute", top: "0", left: 15 }}
+              >
+                <button className="btn btn-secondary me-2">
+                  <Link
+                    to={`/hosting/property/${property.id}/editProperty`}
+                    style={{ textDecoration: "none", color: "white" }}
+                  >
+                    Edit
+                  </Link>
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleDelete(property.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
           <div>
             <img
               src={`${property.image}`}
@@ -69,13 +135,6 @@ const ListingModel = ({ property, onPropertyDeleted }) => {
         >
           See Reservations
         </Link>
-
-        <button
-          className="btn btn-danger mt-1 mb-5"
-          onClick={() => handleDelete(property.id)}
-        >
-          Delete Listing
-        </button>
       </div>
       <ToastContainer />
     </div>

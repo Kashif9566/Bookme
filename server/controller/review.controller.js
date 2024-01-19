@@ -84,9 +84,23 @@ exports.updateReview = async (req, res) => {
 };
 
 exports.deleteReview = async (req, res) => {
-  const id = req.params.reviewId;
+  const reviewId = req.params.reviewId;
+  const userId = req.params.id; // Use req.params.id to get the user ID
+
   try {
-    await Review.destroy({ where: { id } });
+    const review = await Review.findOne({ where: { id: reviewId } });
+
+    if (!review) {
+      return res.status(404).json({ error: "Review not found" });
+    }
+
+    if (review.userId !== userId) {
+      return res
+        .status(403)
+        .json({ error: "Unauthorized: You are not the owner of this review" });
+    }
+
+    await Review.destroy({ where: { id: reviewId } });
     res.status(200).json({ message: "Review deleted successfully" });
   } catch (error) {
     console.error(error);

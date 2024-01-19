@@ -13,6 +13,7 @@ router.get("/user/:userId/property", property.getPropertiesForUser);
 router.get("/property/:propertyId", property.getPropertyById);
 router.delete("/user/:userId/property/:propertyId", property.deleteProperty);
 router.get("/search", property.searchProperty);
-router.put("/property/:propertyId", property.editProperty);
+
+router.put("/property/:propertyId/editProperty", property.editProperty);
 
 module.exports = router;

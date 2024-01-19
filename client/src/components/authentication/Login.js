@@ -3,72 +3,64 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../api/api";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const [loading, setLoading] = useState(false);
-
-  const { email, password } = formData;
   const navigate = useNavigate();
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string().email("Invalid email address").required("Required"),
+      password: Yup.string().required("Required"),
+    }),
+    onSubmit: async (values, { setSubmitting, setFieldError }) => {
+      try {
+        setSubmitting(true);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-  };
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (!email || !password) {
-        toast.error("Please provide email and password", { autoClose: 1000 });
-        return;
-      }
+        const { data } = await api.post(
+          "/user/login",
+          { email: values.email, password: values.password },
+          config
+        );
 
-      setLoading(true);
+        const { role } = data;
+        if (role === "host") {
+          toast.success("Login Successful", { autoClose: 1000 });
+          navigate("/hosting");
+        } else {
+          navigate("/home");
+        }
 
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-
-      const { data } = await api.post(
-        "/user/login",
-        { email, password },
-        config
-      );
-
-      const { role } = data;
-      if (role === "host") {
-        toast.success("Login Successful", { autoClose: 1000 });
-        navigate("/hosting");
-      } else {
-        navigate("/home");
-      }
-
-      localStorage.setItem("userInfo", JSON.stringify(data));
-    } catch (error) {
-      if (error.response) {
-        if (error.response.status === 404) {
-          toast.error("User does not exist", { autoClose: 1000 });
-        } else if (error.response.status === 401) {
-          toast.error("Incorrect password", { autoClose: 1000 });
+        localStorage.setItem("userInfo", JSON.stringify(data));
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status === 404) {
+            toast.error("User does not exist", { autoClose: 1000 });
+          } else if (error.response.status === 401) {
+            toast.error("Incorrect password", { autoClose: 1000 });
+          } else {
+            console.error(error);
+            toast.error("Error signing in", { autoClose: 1000 });
+          }
         } else {
           console.error(error);
           toast.error("Error signing in", { autoClose: 1000 });
         }
-      } else {
-        console.error(error);
-        toast.error("Error signing in", { autoClose: 1000 });
+      } finally {
+        setSubmitting(false);
       }
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+  });
 
   return (
     <div className="container">
@@ -83,7 +75,7 @@ const Login = () => {
           </p>
         </div>
         <div className="col-md-4 card p-3">
-          <form onSubmit={handleSubmit} className="login-form">
+          <form onSubmit={formik.handleSubmit} className="login-form">
             {["email", "password"].map((field) => (
               <div
                 key={field}
@@ -98,41 +90,49 @@ const Login = () => {
                     position: "absolute",
                     pointerEvents: "none",
                     left: "10px",
-                    top: formData[field] ? "0px" : "50%",
-                    transform: formData[field]
+                    top: formik.values[field] ? "0px" : "50%",
+                    transform: formik.values[field]
                       ? "translateY(0)"
                       : "translateY(-50%)",
                     transition: "top 0.3s, font-size 0.3s",
-                    fontSize: formData[field] ? "12px" : "inherit",
-                    color: formData[field] ? "#ff385d" : "inherit",
+                    fontSize: formik.values[field] ? "12px" : "inherit",
+                    color: formik.values[field] ? "#ff385d" : "inherit",
                   }}
                 >
                   <b>{field.charAt(0).toUpperCase() + field.slice(1)}</b>
                 </label>
                 <input
                   type={field === "password" ? "password" : "text"}
-                  className="form-control"
+                  className={`form-control ${
+                    formik.errors[field] && "is-invalid"
+                  }`}
                   id={field}
                   name={field}
-                  value={formData[field]}
-                  onChange={handleChange}
+                  value={formik.values[field]}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   style={{
                     width: "100%",
                     padding: "12px",
-                    border: "1px solid #ccc",
+                    border: `1px solid ${
+                      formik.errors[field] ? "#ff0000" : "#ccc"
+                    }`,
                     borderRadius: "5px",
                     transition: "border-color 0.3s",
                   }}
                 />
+                {formik.errors[field] && formik.touched[field] && (
+                  <div className="invalid-feedback">{formik.errors[field]}</div>
+                )}
               </div>
             ))}
             <button
               type="submit"
               className="btn btn-secondary btn-block m-1"
-              disabled={loading}
+              disabled={formik.isSubmitting}
               style={{ backgroundColor: "#ff385d", border: "white" }}
             >
-              <b>{loading ? "Logging in..." : "Login"}</b>
+              <b>{formik.isSubmitting ? "Logging in..." : "Login"}</b>
             </button>
           </form>
           <div style={{ textAlign: "center", marginTop: "1rem" }}>

@@ -99,6 +99,7 @@ const ListingForm = () => {
       price: "",
       tagLine: "",
     });
+    navigate("/hosting/listing");
   };
   return (
     <div className="container">

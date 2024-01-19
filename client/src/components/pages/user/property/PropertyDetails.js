@@ -24,7 +24,7 @@ import {
 } from "../../../helper/Helpers";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Nav from "../Nav";
+import Nav from "../layout/UserNav";
 import Loader from "../../../Loader";
 import api from "../../../../api/api";
 
@@ -42,8 +42,15 @@ const PropertyDetails = () => {
 
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
+  const [minCheckoutDate, setMinCheckoutDate] = useState("");
   const [guests, setGuests] = useState(1);
   const [numNights, setNumNights] = useState(1);
+
+  useEffect(() => {
+    if (checkIn) {
+      setMinCheckoutDate(checkIn);
+    }
+  }, [checkIn]);
 
   useEffect(() => {
     const { checkIn, checkOut } = getDefaultDates();
@@ -119,7 +126,7 @@ const PropertyDetails = () => {
                     style={{
                       flex: "1",
                       objectFit: "cover",
-                      height: "240px",
+                      height: "300px",
                       borderRadius: "20px",
                     }}
                   />
@@ -351,6 +358,7 @@ const PropertyDetails = () => {
                               className="form-control"
                               type="date"
                               value={checkOut}
+                              min={minCheckoutDate}
                               onChange={(e) => {
                                 setCheckOut(e.target.value);
                                 const newNumNights = calculateNumNights(
@@ -362,6 +370,7 @@ const PropertyDetails = () => {
                             />
                           </div>
                         </div>
+
                         <hr />
 
                         <div className="mx-4 mb-3">
@@ -380,6 +389,7 @@ const PropertyDetails = () => {
                         <button
                           className="btn btn-primary mx-2 p-2 mb-2"
                           type="submit"
+                          style={{ backgroundColor: "#ff385d", border: "0px" }}
                         >
                           Reserve
                         </button>

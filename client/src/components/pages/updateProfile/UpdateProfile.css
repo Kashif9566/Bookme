@@ -1,0 +1,115 @@
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 20px;
+}
+.profile > img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+.update-card > img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.update-profile-card {
+  margin: 150px 40px;
+  padding: 20px 20px 20px 20px;
+}
+.update-profile-card form label {
+  font-weight: bold;
+}
+.update-profile-card button {
+  background-color: #ff385d;
+  border-color: white;
+  color: white;
+}
+.update-profile-card button:hover {
+  color: #ff385d;
+  background-color: white;
+  border-width: 1px;
+  border-color: #ff385d;
+}
+.password-card {
+  padding: 10px 20px 10px 20px;
+  margin: 20px 0px 10px 0px;
+  border-radius: 20px;
+}
+.form-group-password {
+  margin-bottom: 10px;
+}
+.form-group-new-password {
+  margin-bottom: 10px;
+}
+.form-group-password > label {
+  margin-right: 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.form-group-new-password > label {
+  margin-right: 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.form-group-password > input {
+  border-radius: 10px;
+}
+.form-group-new-password > input {
+  border-radius: 10px;
+  margin-left: 20px;
+}
+.profile > button {
+  background-color: #ff385d;
+  border-color: white;
+  color: white;
+}
+.profile > button:hover {
+  background-color: white;
+  color: #ff385d;
+  border-color: #ff385d;
+}
+.error-message {
+  color: red;
+}
+
+.form-group-password.error .error-message {
+  display: block;
+}
+.update-card {
+  margin-top: 10px;
+  padding: 10px 10px 10px 10px;
+  border-radius: 20px;
+}
+.update-profile-form {
+  margin-top: 40px;
+}
+.update-profile-form .form-group > label {
+  font-weight: bold;
+}
+.update-profile-form .form-group > input {
+  border-radius: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+.form-group-email > label {
+  font-weight: bold;
+}
+.form-group-email > input {
+  border-radius: 10px;
+  margin-left: 35px;
+}
+.update-profile-button {
+  margin: 20px 0 0 60px;
+}
+.update-profile-image {
+  margin: 10px 0px 0px 40px;
+}

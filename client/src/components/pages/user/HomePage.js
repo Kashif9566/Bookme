@@ -1,7 +1,7 @@
 import React from "react";
 import Properties from "./property/Properties";
 
-import Nav from "./Nav";
+import Nav from "./layout/UserNav";
 
 const HomePage = () => {
   return (

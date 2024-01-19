@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faUser } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer, toast } from "react-toastify";
@@ -14,9 +14,9 @@ import api from "../../../../api/api";
 const Reviews = ({ property }) => {
   const [content, setContent] = useState("");
   const [rating, setRating] = useState("");
+  const [showDeleteButton, setShowDeleteButton] = useState(null);
   const user = useSelector((state) => state.user);
-  const userId = user.id;
-  const token = user.token;
+  const { id: userId, token } = user;
   const propertyId = property.id;
   const dispatch = useDispatch();
   const isSubmitDisabled = !content || !rating;
@@ -31,18 +31,10 @@ const Reviews = ({ property }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
+      const config = { headers: { Authorization: `Bearer ${token}` } };
       const response = await api.post(
         `/property/${propertyId}`,
-        {
-          content,
-          rating,
-          userId,
-        },
+        { content, rating, userId },
         config
       );
       if (response.data) {
@@ -54,8 +46,45 @@ const Reviews = ({ property }) => {
         toast.error("Error sending review", { autoClose: 1000 });
       }
     } catch (error) {
-      console.log(error);
-      toast.error("Error sending review:", error, { autoClose: 1000 });
+      console.error(error);
+      toast.error("Error sending review", { autoClose: 1000 });
+    }
+  };
+
+  useEffect(() => {
+    const handleDocumentClick = (e) => {
+      if (
+        deleteButtonRef.current &&
+        !deleteButtonRef.current.contains(e.target)
+      ) {
+        setShowDeleteButton(null);
+      }
+    };
+    document.addEventListener("click", handleDocumentClick);
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, []);
+
+  const deleteButtonRef = useRef(null);
+
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      const response = await api.delete(
+        `/user/${userId}/review/${reviewId}`,
+        config
+      );
+      if (response) {
+        toast.success("Review deleted successfully", { autoClose: 1000 });
+        dispatch(fetchReviews({ propertyId }));
+      }
+    } catch (error) {
+      if (error.response?.status === 403) {
+        toast.error("Unauthorized: You are not the owner of this review");
+      } else {
+        console.error(error);
+      }
     }
   };
 
@@ -66,9 +95,7 @@ const Reviews = ({ property }) => {
           Overall Rating : {totalRating.toFixed(2)}
           <FontAwesomeIcon icon={faStar} />
         </h4>
-        <h5>
-          <div> {reviews && reviews.length} Reviews</div>
-        </h5>
+        <h5>{reviews && `${reviews.length} Reviews`}</h5>
         <hr />
         <h5>Write your Review</h5>
       </div>
@@ -95,16 +122,16 @@ const Reviews = ({ property }) => {
             className="btn btn-secondary mt-2 mx-4"
             disabled={isSubmitDisabled}
           >
-            submit
+            Submit
           </button>
         </form>
       </div>
 
       <hr />
 
-      {reviews.map((review, index) => (
-        <div className="col-md-6 d-flex">
-          <div key={index} className="row">
+      {reviews.map((review) => (
+        <div className="col-md-6 d-flex" key={review.id}>
+          <div className="row">
             <div className="d-flex flex-column">
               <div className="mt-4 mb-1 d-flex align-items-center justify-content-start">
                 {review.User.image ? (
@@ -114,7 +141,7 @@ const Reviews = ({ property }) => {
                       height: "50px",
                       borderRadius: "50%",
                     }}
-                    src={`${review.User.image}`}
+                    src={review.User.image}
                     alt="User Avatar"
                   />
                 ) : (
@@ -128,6 +155,29 @@ const Reviews = ({ property }) => {
                     {new Date(review.createdAt).toLocaleString()}
                   </span>
                 </div>
+                {userId === review.User.id && ( // Check if the user is the owner of the review
+                  <span
+                    style={{
+                      marginLeft: "auto",
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                    }}
+                    onClick={() => setShowDeleteButton(review.id)}
+                    ref={deleteButtonRef}
+                  >
+                    &middot;&middot;&middot;
+                    {showDeleteButton === review.id && (
+                      <div className="card mx-2">
+                        <button
+                          className="btn btn-danger btn-sm ml-2"
+                          onClick={() => handleDeleteReview(review.id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </span>
+                )}
               </div>
               <div>
                 <span>
@@ -145,7 +195,6 @@ const Reviews = ({ property }) => {
           </div>
         </div>
       ))}
-
       <ToastContainer />
     </div>
   );

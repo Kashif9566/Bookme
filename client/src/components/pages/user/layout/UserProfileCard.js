@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import "./Profilecard.css";
+import "./UserProfileCard.css";
 import LogoutModel from "../../../model/LogoutModel";
 import { Link } from "react-router-dom";
 
-const ProfileCard = ({
+const UserProfileCard = ({
   user,
   avatarSrc,
   handleLogout,
@@ -39,7 +39,7 @@ const ProfileCard = ({
       <p className="profile-email">{user?.email}</p>
       <hr className="profile-border" />
       <ul className="profile-actions">
-        <Link to={"/hosting/profile"} className="update-profile-btn">
+        <Link to={"/updateProfile"} className="update-profile-btn">
           Update Profile
         </Link>
         <li onClick={openLogoutModal}>Logout</li>
@@ -53,4 +53,4 @@ const ProfileCard = ({
   );
 };
 
-export default ProfileCard;
+export default UserProfileCard;

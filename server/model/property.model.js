@@ -18,9 +18,6 @@ const Property = sequelize.define(
     province: {
       type: DataTypes.STRING,
     },
-    country: {
-      type: DataTypes.STRING,
-    },
     title: {
       type: DataTypes.STRING,
       allowNull: false,

@@ -16,6 +16,7 @@ import Analytics from "./components/pages/host/analytics/Analytics";
 import Login from "./components/authentication/Login";
 import Signup from "./components/authentication/Signup";
 import { useNavigate } from "react-router-dom";
+import UpdateProfile from "./components/pages/UpdateProfile/UpdateProfile";
 
 function App() {
   const user = useSelector((state) => state.user);
@@ -50,6 +51,7 @@ function App() {
                 element={<AllReservations />}
               />
               <Route path="/hosting/analytics" element={<Analytics />} />
+              <Route path="/hosting/profile" element={<UpdateProfile />} />
             </>
           ) : (
             <>
@@ -59,6 +61,7 @@ function App() {
                 element={<PropertyDetails />}
               />
               <Route path="/reservations" element={<Reservations />} />
+              <Route path="/updateProfile" element={<UpdateProfile />} />
             </>
           )
         ) : (

@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { clearUser } from "../../../redux/slice/user.slice";
+import { clearUser } from "../../../../redux/slice/user.slice";
 import { useState, useRef, useEffect } from "react";
-import { searchProperty } from "../../../redux/slice/property.slice";
-import ProfileCard from "../host/layout/ProfileCard";
+import { searchProperty } from "../../../../redux/slice/property.slice";
+import UserProfileCard from "./UserProfileCard";
 
-const Nav = () => {
+const UserNav = () => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -118,15 +118,6 @@ const Nav = () => {
                 </a>
               </li>
               <hr className="w-75 mx-0 my-1" />
-              <li className="nav-item">
-                <button
-                  className="nav-link"
-                  onClick={user ? handleLogout : handleNotLogin}
-                >
-                  {user ? "Logout" : "Login"}
-                </button>
-              </li>
-              <hr className="w-75 mx-0 my-1" />
 
               <li className="nav-item">
                 <button
@@ -154,7 +145,7 @@ const Nav = () => {
         </div>
       </nav>
       {showProfileCard && (
-        <ProfileCard
+        <UserProfileCard
           user={user}
           avatarSrc={avatarSrc}
           handleLogout={handleLogout}
@@ -164,4 +155,4 @@ const Nav = () => {
   );
 };
 
-export default Nav;
+export default UserNav;
