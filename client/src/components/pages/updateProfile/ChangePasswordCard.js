@@ -5,13 +5,10 @@ import api from "../../../api/api";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { passwordSchema } from "../../schemas/PasswordSchema";
 
 const ChangePasswordCard = ({ setShowChangePasswordForm }) => {
   const user = useSelector((state) => state.user);
-  const validationSchema = Yup.object({
-    currentPassword: Yup.string().required("required"),
-    newPassword: Yup.string().required("required"),
-  });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
@@ -42,7 +39,7 @@ const ChangePasswordCard = ({ setShowChangePasswordForm }) => {
           currentPassword: "",
           newPassword: "",
         }}
-        validationSchema={validationSchema}
+        validationSchema={passwordSchema}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting, resetForm, touched, errors }) => (
@@ -61,6 +58,7 @@ const ChangePasswordCard = ({ setShowChangePasswordForm }) => {
                 type="password"
                 id="currentPassword"
                 name="currentPassword"
+                className="form-control"
               />
               <ErrorMessage
                 name="currentPassword"
@@ -72,7 +70,12 @@ const ChangePasswordCard = ({ setShowChangePasswordForm }) => {
               <label htmlFor="newPassword">
                 New Password<span>*</span>
               </label>
-              <Field type="password" id="newPassword" name="newPassword" />
+              <Field
+                type="password"
+                id="newPassword"
+                name="newPassword"
+                className="form-control"
+              />
               <ErrorMessage
                 name="newPassword"
                 component="div"

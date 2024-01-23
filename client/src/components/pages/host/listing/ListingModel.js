@@ -91,7 +91,12 @@ const ListingModel = ({ property, onPropertyDeleted }) => {
             {showOptions && (
               <div
                 className="bg-light p-2 rounded shadow"
-                style={{ position: "absolute", top: "0", left: 15 }}
+                style={{
+                  position: "absolute",
+                  top: "0",
+                  left: 15,
+                  zIndex: 1000,
+                }}
               >
                 <button className="btn btn-secondary me-2">
                   <Link

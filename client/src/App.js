@@ -17,6 +17,7 @@ import Login from "./components/authentication/Login";
 import Signup from "./components/authentication/Signup";
 import { useNavigate } from "react-router-dom";
 import UpdateProfile from "./components/pages/UpdateProfile/UpdateProfile";
+import EditListing from "./components/pages/host/listing/EditListing";
 
 function App() {
   const user = useSelector((state) => state.user);
@@ -42,6 +43,10 @@ function App() {
               <Route path="/hosting/listing" element={<ListingPage />} />
               <Route path="/newListing" element={<NewListing />} />
               <Route path="/listingForm" element={<ListingForm />} />
+              <Route
+                path="/hosting/property/:propertyId/editProperty"
+                element={<EditListing />}
+              />
               <Route
                 path="/hosting/property/:propertyId/reservations"
                 element={<ReservationPage />}

@@ -53,19 +53,20 @@
 .form-group-password > label {
   margin-right: 8px;
   font-size: 15px;
+  margin-bottom: 5px;
   font-weight: 600;
 }
 .form-group-new-password > label {
   margin-right: 8px;
   font-size: 15px;
   font-weight: 600;
+  margin-bottom: 5px;
 }
 .form-group-password > input {
   border-radius: 10px;
 }
 .form-group-new-password > input {
   border-radius: 10px;
-  margin-left: 20px;
 }
 .profile > button {
   background-color: #ff385d;

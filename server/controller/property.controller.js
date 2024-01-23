@@ -79,22 +79,6 @@ exports.createProperty = async (req, res) => {
   }
 };
 
-// const uploadToCloudinary = (filePath) => {
-//   return new Promise((resolve, reject) => {
-//     cloudinary.uploader.upload(filePath, (err, result) => {
-//       if (err) {
-//         console.log(err);
-//         reject({
-//           success: false,
-//           message: "Error uploading image to Cloudinary",
-//         });
-//       } else {
-//         resolve(result);
-//       }
-//     });
-//   });
-// };
-
 exports.getProperties = async (req, res) => {
   try {
     const properties = await Property.findAll({

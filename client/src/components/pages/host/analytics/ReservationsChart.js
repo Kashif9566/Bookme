@@ -31,7 +31,7 @@ const ReservationsChart = ({ reservationsData }) => {
         scales: {
           y: {
             suggestedMin: 0,
-            suggestedMax: 10, //Math.ceil(Math.max(...reservationsData)),
+            suggestedMax: 10,
             beginAtZero: true,
           },
         },

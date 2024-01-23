@@ -1,0 +1,65 @@
+.edit-user-info {
+  width: 300px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+.edit-user-info .card-header {
+  font-weight: 600;
+}
+.user-edit-imageS > img {
+  height: 150px;
+  width: 150px;
+  margin: 20px 0px 20px 0px;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  border: 2px solid #ddd;
+}
+.edit-user-info > form .form-group > label {
+  font-weight: 600;
+  margin: 0px 10px 10px 3px;
+}
+.edit-user-info > form .form-group > input {
+  height: 40px;
+}
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.edit-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  text-align: center;
+  padding: 8px;
+  box-sizing: border-box;
+  display: block;
+}
+
+.user-edit-image {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  width: 100%;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+}
+
+.user-edit-image img {
+  width: auto;
+  height: 100%;
+  display: block;
+}
+.update-profile-button {
+  display: flex;
+}

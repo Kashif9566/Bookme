@@ -62,7 +62,7 @@ const ListingPage = () => {
               <div className="container">
                 <div className="row">
                   {properties.map((property) => (
-                    <div key={property.id} className="col-md-4 ">
+                    <div key={property.id} className="col-md-4 my-3">
                       <ListingModel
                         property={property}
                         onPropertyDeleted={handlePropertyDeleted}

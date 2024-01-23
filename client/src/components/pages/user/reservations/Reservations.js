@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 const Reservations = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [reservations, setReservations] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const user = useSelector((state) => state.user);
   const userId = user.id;
   const token = user.token;
@@ -53,6 +54,7 @@ const Reservations = () => {
       if (response.status === 200) {
         toast.success("Reservation Cancelled", { autoClose: 1000 });
         fetchReservations();
+        setShowModal(false); // Close the modal after successful cancellation
       }
     } catch (error) {
       console.error(error);
@@ -76,7 +78,7 @@ const Reservations = () => {
                     <p>You have not made any bookings yet</p>
                     <div>
                       <p style={{ color: "#1e2d7d ", fontWeight: 500 }}>
-                        Want to book a place ?
+                        Want to book a place?
                       </p>
                       <Link
                         to={"/home"}
@@ -118,17 +120,21 @@ const Reservations = () => {
                               <button
                                 type="button"
                                 className="btn btn-danger"
-                                data-bs-toggle="modal"
-                                data-bs-target={`#exampleModal${reservation.id}`}
+                                onClick={() => setShowModal(true)}
                               >
                                 Cancel Reservation
                               </button>
                               <div
-                                className="modal fade"
+                                className={`modal fade ${
+                                  showModal ? "show" : ""
+                                }`}
                                 id={`exampleModal${reservation.id}`}
                                 tabIndex="-1"
                                 aria-labelledby={`exampleModalLabel${reservation.id}`}
-                                aria-hidden="true"
+                                aria-hidden={!showModal}
+                                style={{
+                                  display: showModal ? "block" : "none",
+                                }}
                               >
                                 <div className="modal-dialog">
                                   <div className="modal-content">

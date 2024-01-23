@@ -1,83 +1,117 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FaHome } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../../../../api/api";
-import { useFormik } from "formik";
-import { listingSchema } from "../../../schemas/ListingSchema";
 
-const ListingForm = () => {
+const EditListing = () => {
+  const { propertyId } = useParams();
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const userId = user.id;
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    formik.setFieldValue("image", file);
-  };
+  const [prevImageURL, setPrevImageURL] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    address: "",
+    city: "",
+    town: "",
+    province: "",
+    image: null,
+    guest: 1,
+    rooms: 1,
+    bed: 1,
+    bathroom: 1,
+    title: "",
+    description: "",
+    price: 0,
+    tagLine: "",
+  });
 
-  const formik = useFormik({
-    initialValues: {
-      address: "",
-      city: "",
-      town: "",
-      province: "",
-      image: "",
-      guest: 1,
-      rooms: 1,
-      bed: 1,
-      bathroom: 1,
-      title: "",
-      description: "",
-      price: "",
-      tagLine: "",
-    },
-    validationSchema: listingSchema,
-    onSubmit: async (values) => {
+  useEffect(() => {
+    const fetchPropertyData = async () => {
       try {
         const config = {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         };
-
-        const { data } = await api.post(
-          `/user/${userId}/property`,
-          createFormData(values),
-          config
-        );
-        if (data) {
-          toast.success("Property listed successfully!");
-          navigate("/hosting/listing");
-        } else {
-          toast.error("Error listing property");
+        if (propertyId) {
+          const { data } = await api.get(`/property/${propertyId}`, config);
+          setPrevImageURL(data.image);
+          setFormData((prevData) => ({ ...prevData, ...data }));
         }
       } catch (error) {
-        toast.error("Error listing property");
-        console.error("Error listing property:", error);
+        console.error("Error fetching property data:", error);
       }
-    },
-  });
+    };
 
-  const createFormData = (data) => {
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-    return formData;
+    fetchPropertyData();
+  }, [propertyId, user.token, user.id]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPrevImageURL(URL.createObjectURL(file));
+      setFormData((prevData) => ({
+        ...prevData,
+        image: file,
+      }));
+    }
   };
-  const serviceFee = 0.1 * parseFloat(formik.values.price);
-  const formattedServiceFee = serviceFee.toFixed(2);
-  const totalWithServiceFee = parseFloat(formik.values.price) + serviceFee;
-  const youEarn = formik.values.price - serviceFee;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+      const requiredFields = ["address", "city", "province", "price"];
+      if (requiredFields.some((field) => !formData[field])) {
+        toast.error("Please provide necessary information");
+        return;
+      }
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const formDataObject = new FormData();
+      for (const [key, value] of Object.entries(formData)) {
+        formDataObject.append(key, value);
+      }
+
+      const { response } = await api.put(
+        `/property/${propertyId}/editProperty`,
+        formDataObject,
+        config
+      );
+      if ({ response }) {
+        toast.success("Listing saved successfully!");
+        navigate("/hosting/listing");
+      } else {
+        toast.error("Error saving listing. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleExit = () => {
-    formik.resetForm();
     navigate("/hosting/listing");
   };
 
+  const serviceFee = 0.1 * parseFloat(formData.price);
+  const formattedServiceFee = serviceFee.toFixed(2);
+  const totalWithServiceFee = parseFloat(formData.price) + serviceFee;
+  const youEarn = formData.price - serviceFee;
   return (
     <div className="container">
       <div className="d-flex justify-content-between align-items-center mx-2 my-5">
@@ -105,7 +139,11 @@ const ListingForm = () => {
         >
           New Listing
         </span>
-        <form className="form row" onSubmit={formik.handleSubmit}>
+        <form
+          className="form row"
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+        >
           <div className="col-md-7">
             <div className="card mt-4">
               <div className="card-header d-flex flex-column p-3">
@@ -121,51 +159,41 @@ const ListingForm = () => {
               <div className="d-flex flex-column align-items-start my-1 mx-4 mt-4">
                 <input
                   type="text"
+                  name="address"
                   className="form-control"
                   placeholder="Street Address"
-                  value={formik.values.address}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
                 />
-                {formik.touched.address && formik.errors.address ? (
-                  <div style={{ color: "red" }}>{formik.errors.address}</div>
-                ) : null}
               </div>
               <div className="d-flex flex-column align-items-start my-1 mx-4">
                 <input
                   type="text"
+                  name="city"
                   className="form-control"
                   placeholder="City"
-                  value={formik.values.city}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
                 />
-                {formik.touched.city && formik.errors.city ? (
-                  <div style={{ color: "red" }}>{formik.errors.city}</div>
-                ) : null}
               </div>
               <div className="d-flex flex-column align-items-start my-1 mx-4">
                 <input
                   type="text"
+                  name="town"
                   className="form-control"
                   placeholder="Town"
-                  value={formik.values.town}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="town"
+                  value={formData.town}
+                  onChange={handleChange}
                 />
               </div>
               <div className="d-flex flex-column align-items-start my-1 mx-4 mb-4">
                 <input
                   type="text"
+                  name="province"
                   className="form-control"
                   placeholder="Province"
-                  value={formik.values.province}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="province"
+                  value={formData.province}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -174,6 +202,17 @@ const ListingForm = () => {
                 <label className="mb-2">
                   <b>Media</b>
                 </label>
+                {prevImageURL && (
+                  <img
+                    src={prevImageURL}
+                    alt="Previous"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      marginBottom: "10px",
+                    }}
+                  />
+                )}
                 <input
                   type="file"
                   id="image"
@@ -197,48 +236,44 @@ const ListingForm = () => {
                 <label className="mb-2">Guest allowed</label>
                 <input
                   type="text"
+                  name="guest"
                   className="form-control"
                   style={{ width: "300px" }}
-                  value={formik.values.guest}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="guest"
+                  value={formData.guest}
+                  onChange={handleChange}
                 />
               </div>
               <div className="d-flex align-items-center justify-content-between my-1 mx-4">
                 <label className="mb-2">Bedrooms</label>
                 <input
                   type="text"
+                  name="rooms"
                   className="form-control"
                   style={{ width: "300px" }}
-                  value={formik.values.rooms}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="rooms"
+                  value={formData.rooms}
+                  onChange={handleChange}
                 />
               </div>
               <div className="d-flex align-items-center justify-content-between my-1 mx-4">
                 <label className="mb-2">Beds</label>
                 <input
                   type="text"
+                  name="bed"
                   className="form-control"
                   style={{ width: "300px" }}
-                  value={formik.values.bed}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="bed"
+                  value={formData.bed}
+                  onChange={handleChange}
                 />
               </div>
               <div className="d-flex align-items-center justify-content-between my-1 mx-4">
                 <label className="mb-2">Bathrooms</label>
                 <input
                   type="text"
+                  name="bathroom"
                   className="form-control"
                   style={{ width: "300px" }}
-                  value={formik.values.bathroom}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="bathroom"
+                  value={formData.bathroom}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -263,24 +298,19 @@ const ListingForm = () => {
               <div className="d-flex flex-column align-items-start my-1 mx-4 mb-2">
                 <input
                   type="text"
+                  name="title"
                   className="form-control"
                   placeholder="Title"
-                  value={formik.values.title}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
                 />
-                {formik.touched.title && formik.errors.title ? (
-                  <div style={{ color: "red" }}>{formik.errors.title}</div>
-                ) : null}
                 <input
                   type="text"
+                  name="tagLine"
                   className="form-control my-2"
                   placeholder="Tagline"
-                  value={formik.values.tagLine}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="tagLine"
+                  value={formData.tagLine}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -303,12 +333,11 @@ const ListingForm = () => {
               <div className="d-flex flex-column align-items-start my-1 mx-4 mb-2">
                 <textarea
                   type="text"
+                  name="description"
                   className="form-control"
                   placeholder="Write here ...!"
-                  value={formik.values.description}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
                   style={{ height: "150px" }}
                 />
               </div>
@@ -333,20 +362,16 @@ const ListingForm = () => {
               <div className="d-flex flex-column  my-1 mx-4 mb-2">
                 <input
                   type="text"
+                  name="price"
                   className="form-control"
                   placeholder="Price"
-                  value={formik.values.price}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
                 />
-                {formik.touched.price && formik.errors.price ? (
-                  <div style={{ color: "red" }}>{formik.errors.price}</div>
-                ) : null}
                 <div className="d-flex flex-column mx-2 mt-2">
                   <div className="d-flex align-items-center justify-content-between">
                     <span>Base Price</span>
-                    <span>${formik.values.price}</span>
+                    <span>${formData.price}</span>
                   </div>
                   <div className="d-flex align-items-center justify-content-between">
                     <span>Service Fee</span>
@@ -384,9 +409,9 @@ const ListingForm = () => {
             <button
               type="submit"
               className="btn btn-secondary d-flex align-items-start"
-              disabled={formik.isSubmitting}
+              disabled={loading}
             >
-              {formik.isSubmitting ? "Saving..." : "Save"}
+              {loading ? "Saving..." : "Save"}
             </button>
           </div>
         </form>
@@ -396,4 +421,4 @@ const ListingForm = () => {
   );
 };
 
-export default ListingForm;
+export default EditListing;

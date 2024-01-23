@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,7 +17,7 @@ const Login = () => {
       email: Yup.string().email("Invalid email address").required("Required"),
       password: Yup.string().required("Required"),
     }),
-    onSubmit: async (values, { setSubmitting, setFieldError }) => {
+    onSubmit: async (values, { setSubmitting }) => {
       try {
         setSubmitting(true);
 
@@ -104,7 +104,9 @@ const Login = () => {
                 <input
                   type={field === "password" ? "password" : "text"}
                   className={`form-control ${
-                    formik.errors[field] && "is-invalid"
+                    formik.errors[field] && formik.touched[field]
+                      ? "is-invalid"
+                      : ""
                   }`}
                   id={field}
                   name={field}
@@ -115,7 +117,9 @@ const Login = () => {
                     width: "100%",
                     padding: "12px",
                     border: `1px solid ${
-                      formik.errors[field] ? "#ff0000" : "#ccc"
+                      formik.errors[field] && formik.touched[field]
+                        ? "#ff0000"
+                        : "#ccc"
                     }`,
                     borderRadius: "5px",
                     transition: "border-color 0.3s",

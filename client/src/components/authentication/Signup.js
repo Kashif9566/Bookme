@@ -19,6 +19,7 @@ const Signup = () => {
       confirmpassword: "",
       role: "user",
       image: null,
+      showPassword: false,
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -108,7 +109,7 @@ const Signup = () => {
                       <option value="host">Host</option>
                     </select>
                   ) : (
-                    <div className="input-group">
+                    <div className="input-groups d-flex">
                       <input
                         type={
                           field.includes("password") &&

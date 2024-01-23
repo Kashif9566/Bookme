@@ -160,27 +160,23 @@ exports.updateUser = async (req, res) => {
       }
     }
 
-    await User.update({ username, email }, { where: { id: userId } });
-
+    let imageUrl = user.image;
     if (req.file) {
-      if (user.image) {
-        fs.unlinkSync(user.image);
-      }
-
       const uploadResult = await uploadToCloudinary(req.file);
-      const imageUrl = uploadResult.secure_url;
-
-      await User.update({ image: imageUrl }, { where: { id: userId } });
+      imageUrl = uploadResult.secure_url;
     }
 
-    const updatedUser = await User.findByPk(userId);
+    await User.update(
+      { username, email, image: imageUrl },
+      { where: { id: userId } }
+    );
 
     res.status(200).json({
-      id: updatedUser.id,
-      username: updatedUser.username,
-      email: updatedUser.email,
-      image: updatedUser.image,
-      role: updatedUser.role,
+      id: userId,
+      username,
+      email,
+      image: imageUrl,
+      role: user.role,
     });
   } catch (error) {
     console.error(error);
@@ -221,6 +217,29 @@ exports.updateImage = async (req, res) => {
       email: updatedUser.email,
       image: updatedUser.image,
       role: updatedUser.role,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+exports.getUserById = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      image: user.image,
+      role: user.role,
     });
   } catch (error) {
     console.error(error);

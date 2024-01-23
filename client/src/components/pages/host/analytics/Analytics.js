@@ -16,15 +16,17 @@ import { Doughnut } from "react-chartjs-2";
 const Analytics = () => {
   const user = useSelector((state) => state.user);
   const userId = user.id;
+  const token = user.token;
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchPropertyForHost(userId));
-    dispatch(fetchAllReservationsForHost(userId));
-  }, [dispatch, userId]);
+    dispatch(fetchAllReservationsForHost({ userId, token }));
+  }, [dispatch, userId, token]);
 
   const properties = useSelector(selectPropertiesForHost);
   const reservations = useSelector(selectAllReservationsForHost);
+  console.log(reservations.length);
 
   const reservationsData = Array.from({ length: 31 }, (_, i) => {
     const date = i + 1;
