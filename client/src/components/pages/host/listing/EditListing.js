@@ -27,6 +27,7 @@ const EditListing = () => {
     description: "",
     price: 0,
     tagLine: "",
+    discount: 0,
   });
 
   useEffect(() => {
@@ -52,11 +53,17 @@ const EditListing = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+
     if (file) {
       setPrevImageURL(URL.createObjectURL(file));
       setFormData((prevData) => ({
         ...prevData,
         image: file,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        image: null,
       }));
     }
   };
@@ -112,6 +119,9 @@ const EditListing = () => {
   const formattedServiceFee = serviceFee.toFixed(2);
   const totalWithServiceFee = parseFloat(formData.price) + serviceFee;
   const youEarn = formData.price - serviceFee;
+  const discountPercentage = parseFloat(formData.discount) || 0;
+  const discountAmount = (discountPercentage / 100) * youEarn;
+  const priceAfterDiscount = youEarn - discountAmount;
   return (
     <div className="container">
       <div className="d-flex justify-content-between align-items-center mx-2 my-5">
@@ -277,6 +287,34 @@ const EditListing = () => {
                 />
               </div>
             </div>
+            <div className="card my-3">
+              <div className="card-header d-flex flex-column justify-content-center align-items-center p-3">
+                <div style={{ fontsize: "40px", fontWeight: 700 }}>
+                  Tell something about your palce
+                </div>
+                <span
+                  style={{
+                    fontsize: "30px",
+                    fontWeight: 400,
+                    color: "#777777",
+                  }}
+                >
+                  Describe yout place shortly
+                </span>
+              </div>
+              <hr />
+              <div className="d-flex flex-column align-items-start my-1 mx-4 mb-2">
+                <textarea
+                  type="text"
+                  name="description"
+                  className="form-control"
+                  placeholder="Write here ...!"
+                  value={formData.description}
+                  onChange={handleChange}
+                  style={{ height: "150px" }}
+                />
+              </div>
+            </div>
           </div>
           <div className="col-md-5">
             <div className="card mt-4">
@@ -314,34 +352,7 @@ const EditListing = () => {
                 />
               </div>
             </div>
-            <div className="card mt-4">
-              <div className="card-header d-flex flex-column justify-content-center align-items-center p-3">
-                <div style={{ fontsize: "40px", fontWeight: 700 }}>
-                  Tell something about your palce
-                </div>
-                <span
-                  style={{
-                    fontsize: "30px",
-                    fontWeight: 400,
-                    color: "#777777",
-                  }}
-                >
-                  Describe yout place shortly
-                </span>
-              </div>
-              <hr />
-              <div className="d-flex flex-column align-items-start my-1 mx-4 mb-2">
-                <textarea
-                  type="text"
-                  name="description"
-                  className="form-control"
-                  placeholder="Write here ...!"
-                  value={formData.description}
-                  onChange={handleChange}
-                  style={{ height: "150px" }}
-                />
-              </div>
-            </div>
+
             <div className="card my-3">
               <div className="card-header d-flex flex-column justify-content-center align-items-center p-3">
                 <div style={{ fontsize: "40px", fontWeight: 700 }}>
@@ -404,12 +415,56 @@ const EditListing = () => {
                 </div>
               </div>
             </div>
+            <div className="card">
+              <div className="card-header d-flex flex-column justify-content-center align-items-center p-3">
+                <span style={{ fontSize: "20px", fontWeight: 500 }}>
+                  Exclusive Property Discounts!
+                </span>
+                <span
+                  style={{
+                    fontsize: "30px",
+                    fontWeight: 400,
+                    color: "#777777",
+                  }}
+                >
+                  Discover amazing deals on our featured properties.
+                </span>
+              </div>
+              <div className="card-body">
+                <label className="mx-4 my-1" style={{ fontWeight: 600 }}>
+                  Discount
+                </label>
+                <div className="m-3">
+                  <input
+                    type="text"
+                    className="form-control p-2"
+                    placeholder="Discount (%)"
+                    value={formData.discount}
+                    onChange={handleChange}
+                    name="discount"
+                  />
+                </div>
+                <div
+                  className="card p-3 mt-4"
+                  style={{ width: "100%", borderRadius: "15px" }}
+                >
+                  <div
+                    className="d-flex align-items-center justify-content-between"
+                    style={{ fontsize: "15px", fontWeight: 700 }}
+                  >
+                    <span>After Discount Price</span>
+                    <span>${priceAfterDiscount}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div>
             <button
               type="submit"
               className="btn btn-secondary d-flex align-items-start"
               disabled={loading}
+              style={{ backgroundColor: "#ff385d ", border: "0px" }}
             >
               {loading ? "Saving..." : "Save"}
             </button>

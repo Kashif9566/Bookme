@@ -3,7 +3,6 @@ const User = require("../model/user.model");
 const Review = require("../model/review.model");
 const { Op } = require("sequelize");
 const cloudinary = require("../config/cloudinary.config");
-
 exports.createProperty = async (req, res) => {
   const {
     address,
@@ -17,6 +16,7 @@ exports.createProperty = async (req, res) => {
     bed,
     bathroom,
     province,
+    discount,
   } = req.body;
 
   const image = req.file ? req.file.path : null;
@@ -44,6 +44,12 @@ exports.createProperty = async (req, res) => {
         });
       }
     }
+    const youEarn = parseFloat(price);
+    const discountPercentage = parseFloat(discount) || 0;
+    const discountAmount = (discountPercentage / 100) * youEarn;
+    const discountedPrice =
+      discountPercentage === 0 ? youEarn : youEarn - discountAmount;
+
     const newProperty = await Property.create({
       address,
       city,
@@ -51,10 +57,12 @@ exports.createProperty = async (req, res) => {
       title,
       description,
       tagLine,
-      price,
+      price: youEarn,
       rooms,
       bed,
       bathroom,
+      discount,
+      discountedPrice,
       image: imageUrl,
       province,
       UserId: userId,
@@ -209,10 +217,10 @@ exports.editProperty = async (req, res) => {
     rooms,
     bed,
     bathroom,
+    discount,
     province,
   } = req.body;
 
-  const image = req.file ? req.file.path : null;
   const propertyId = req.params.propertyId;
 
   try {
@@ -225,9 +233,10 @@ exports.editProperty = async (req, res) => {
 
     let imageUrl = null;
 
-    if (image) {
+    // Check if a new image is provided
+    if (req.file) {
       try {
-        const result = await uploadToCloudinary(image);
+        const result = await uploadToCloudinary(req.file.path);
         imageUrl = result.secure_url;
       } catch (cloudinaryError) {
         console.error(cloudinaryError);
@@ -237,6 +246,18 @@ exports.editProperty = async (req, res) => {
         });
       }
     }
+
+    // If no new image is provided, keep the previous image
+    if (!imageUrl) {
+      const existingProperty = await Property.findByPk(propertyId);
+      imageUrl = existingProperty.image;
+    }
+
+    const youEarn = parseFloat(price);
+    const discountPercentage = parseFloat(discount) || 0;
+    const discountAmount = (discountPercentage / 100) * youEarn;
+    const discountedPrice =
+      discountPercentage === 0 ? youEarn : youEarn - discountAmount;
 
     const updatedProperty = await Property.update(
       {
@@ -249,6 +270,8 @@ exports.editProperty = async (req, res) => {
         price,
         rooms,
         bed,
+        discount,
+        discountedPrice,
         bathroom,
         image: imageUrl,
         province,

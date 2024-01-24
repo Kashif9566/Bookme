@@ -1,6 +1,5 @@
 import React from "react";
 import Properties from "./property/Properties";
-
 import Nav from "./layout/UserNav";
 
 const HomePage = () => {

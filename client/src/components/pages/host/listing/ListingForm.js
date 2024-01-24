@@ -33,6 +33,7 @@ const ListingForm = () => {
       description: "",
       price: "",
       tagLine: "",
+      discount: 0,
     },
     validationSchema: listingSchema,
     onSubmit: async (values) => {
@@ -72,6 +73,10 @@ const ListingForm = () => {
   const formattedServiceFee = serviceFee.toFixed(2);
   const totalWithServiceFee = parseFloat(formik.values.price) + serviceFee;
   const youEarn = formik.values.price - serviceFee;
+
+  const discountPercentage = parseFloat(formik.values.discount) || 0;
+  const discountAmount = (discountPercentage / 100) * youEarn;
+  const priceAfterDiscount = youEarn - discountAmount;
 
   const handleExit = () => {
     formik.resetForm();
@@ -242,6 +247,35 @@ const ListingForm = () => {
                 />
               </div>
             </div>
+            <div className="card my-3">
+              <div className="card-header d-flex flex-column justify-content-center align-items-center p-3">
+                <div style={{ fontsize: "40px", fontWeight: 700 }}>
+                  Tell something about your palce
+                </div>
+                <span
+                  style={{
+                    fontsize: "30px",
+                    fontWeight: 400,
+                    color: "#777777",
+                  }}
+                >
+                  Describe yout place shortly
+                </span>
+              </div>
+              <hr />
+              <div className="d-flex flex-column align-items-start my-1 mx-4 mb-2">
+                <textarea
+                  type="text"
+                  className="form-control"
+                  placeholder="Write here ...!"
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  name="description"
+                  style={{ height: "150px" }}
+                />
+              </div>
+            </div>
           </div>
           <div className="col-md-5">
             <div className="card mt-4">
@@ -284,35 +318,7 @@ const ListingForm = () => {
                 />
               </div>
             </div>
-            <div className="card mt-4">
-              <div className="card-header d-flex flex-column justify-content-center align-items-center p-3">
-                <div style={{ fontsize: "40px", fontWeight: 700 }}>
-                  Tell something about your palce
-                </div>
-                <span
-                  style={{
-                    fontsize: "30px",
-                    fontWeight: 400,
-                    color: "#777777",
-                  }}
-                >
-                  Describe yout place shortly
-                </span>
-              </div>
-              <hr />
-              <div className="d-flex flex-column align-items-start my-1 mx-4 mb-2">
-                <textarea
-                  type="text"
-                  className="form-control"
-                  placeholder="Write here ...!"
-                  value={formik.values.description}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="description"
-                  style={{ height: "150px" }}
-                />
-              </div>
-            </div>
+
             <div className="card my-3">
               <div className="card-header d-flex flex-column justify-content-center align-items-center p-3">
                 <div style={{ fontsize: "40px", fontWeight: 700 }}>
@@ -379,12 +385,60 @@ const ListingForm = () => {
                 </div>
               </div>
             </div>
+            <div className="card">
+              <div className="card-header d-flex flex-column justify-content-center align-items-center p-3">
+                <span style={{ fontSize: "20px", fontWeight: 500 }}>
+                  Exclusive Property Discounts!
+                </span>
+                <span
+                  style={{
+                    fontsize: "30px",
+                    fontWeight: 400,
+                    color: "#777777",
+                  }}
+                >
+                  Discover amazing deals on our featured properties.
+                </span>
+              </div>
+              <div className="card-body">
+                <label className="mx-4 my-1" style={{ fontWeight: 600 }}>
+                  Discount
+                </label>
+                <div className="m-3">
+                  <input
+                    type="text"
+                    className="form-control p-2"
+                    placeholder="Discount (%)"
+                    value={formik.values.discount}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    name="discount"
+                  />
+                  {formik.touched.discount && formik.errors.discount ? (
+                    <div style={{ color: "red" }}>{formik.errors.discount}</div>
+                  ) : null}
+                </div>
+                <div
+                  className="card p-3 mt-4"
+                  style={{ width: "100%", borderRadius: "15px" }}
+                >
+                  <div
+                    className="d-flex align-items-center justify-content-between"
+                    style={{ fontsize: "15px", fontWeight: 700 }}
+                  >
+                    <span>After Discount Price</span>
+                    <span>${priceAfterDiscount}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div>
             <button
               type="submit"
               className="btn btn-secondary d-flex align-items-start"
               disabled={formik.isSubmitting}
+              style={{ backgroundColor: "#ff385d ", border: "0px" }}
             >
               {formik.isSubmitting ? "Saving..." : "Save"}
             </button>

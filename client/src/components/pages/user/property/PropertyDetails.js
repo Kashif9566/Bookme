@@ -69,10 +69,10 @@ const PropertyDetails = () => {
       </div>
     );
   }
-  if (!property.price) {
+  if (!property.discountedPrice) {
     return <div>Error: Property price is not available.</div>;
   }
-  const totalPrice = Number(property.price) * calculatedNumNights;
+  const totalPrice = Number(property.discountedPrice) * calculatedNumNights;
   const serviceFee = 0.1 * totalPrice;
   const totalWithServiceFee = totalPrice + serviceFee;
 
@@ -325,7 +325,7 @@ const PropertyDetails = () => {
                           margin: "3px 10px 3px ",
                         }}
                       >
-                        $ {property.price}{" "}
+                        $ {property.discountedPrice}{" "}
                         <span style={{ fontSize: "14px", fontWeight: 300 }}>
                           night
                         </span>

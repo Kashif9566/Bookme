@@ -198,13 +198,10 @@ exports.updateImage = async (req, res) => {
 
     if (req.file) {
       if (user.image) {
-        fs.unlinkSync(user.image);
+        const uploadResult = await uploadToCloudinary(req.file);
+        imageUrl = uploadResult.secure_url;
+        await User.update({ image: imageUrl }, { where: { id: userId } });
       }
-
-      const uploadResult = await uploadToCloudinary(req.file);
-      imageUrl = uploadResult.secure_url;
-
-      await User.update({ image: imageUrl }, { where: { id: userId } });
     } else {
       return res.status(400).json({ error: "Image file is missing" });
     }

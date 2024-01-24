@@ -5,9 +5,6 @@ const Footer = () => {
     <footer
       className="bg-light"
       style={{
-        position: "fixed",
-        bottom: 0,
-        width: "100%",
         textAlign: "center",
         padding: "10px",
       }}

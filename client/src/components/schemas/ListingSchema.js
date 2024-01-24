@@ -6,4 +6,5 @@ export const listingSchema = Yup.object({
   province: Yup.string().required("Required"),
   title: Yup.string().required("Required"),
   price: Yup.number().required("Required").positive("Must be positive"),
+  discount: Yup.number().integer("Must be number"),
 });

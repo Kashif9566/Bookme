@@ -35,6 +35,15 @@ const Property = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    discount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    discountedPrice: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     rooms: {
       type: DataTypes.INTEGER,
       allowNull: false,

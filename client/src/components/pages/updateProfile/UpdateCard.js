@@ -6,7 +6,7 @@ import { updateUser } from "../../../redux/slice/user.slice";
 import { useFormik } from "formik";
 import api from "../../../api/api";
 import "./UpdateCard.css";
-import { validationSchema } from "../../schemas/UserSchema";
+import { updateSchemma } from "../../schemas/UserSchema";
 
 const UpdateCard = ({ setShowUpdateCard }) => {
   const user = useSelector((state) => state.user);
@@ -26,14 +26,20 @@ const UpdateCard = ({ setShowUpdateCard }) => {
     };
 
     fetchUserData();
-  }, [user]);
+
+    return () => {
+      if (prevImageURL) {
+        URL.revokeObjectURL(prevImageURL);
+      }
+    };
+  }, [user, prevImageURL]);
 
   const formik = useFormik({
     initialValues: {
       username: "",
       email: "",
     },
-    validationSchema: validationSchema,
+    validationSchema: updateSchemma,
     onSubmit: async (values) => {
       try {
         const config = {
@@ -54,9 +60,13 @@ const UpdateCard = ({ setShowUpdateCard }) => {
           formDataObject,
           config
         );
+
         dispatch(updateUser(response.data));
         setShowUpdateCard(false);
         toast.success("Profile Updated Successfully", { autoClose: 1000 });
+
+        // Reset the form after successful submission
+        formik.resetForm();
       } catch (error) {
         console.error("Error updating profile", error);
         toast.error("Error updating profile. Please try again", {
