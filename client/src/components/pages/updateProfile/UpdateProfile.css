@@ -124,6 +124,9 @@
   border: 2px solid #ddd;
   border-radius: 50%;
 }
+.update-profile-image .avatar {
+  width: 200px;
+}
 .user-edit-image img {
   width: 200;
   height: 100%;

@@ -54,7 +54,7 @@ const Reservations = () => {
       if (response.status === 200) {
         toast.success("Reservation Cancelled", { autoClose: 1000 });
         fetchReservations();
-        setShowModal(false); // Close the modal after successful cancellation
+        setShowModal(false);
       }
     } catch (error) {
       console.error(error);
@@ -148,6 +148,7 @@ const Reservations = () => {
                                         type="button"
                                         className="btn btn-secondary"
                                         data-bs-dismiss="modal"
+                                        onClick={() => setShowModal(false)}
                                       >
                                         Close
                                       </button>

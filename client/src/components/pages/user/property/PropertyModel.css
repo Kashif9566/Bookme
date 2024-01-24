@@ -53,6 +53,9 @@
   align-items: center;
   color: black;
 }
+.rating > svg {
+  color: gold;
+}
 
 .total-rating {
   margin: 0 5px;

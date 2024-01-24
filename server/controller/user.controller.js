@@ -183,7 +183,6 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 exports.updateImage = async (req, res) => {
   const { userId } = req.params;
 
@@ -198,6 +197,10 @@ exports.updateImage = async (req, res) => {
 
     if (req.file) {
       if (user.image) {
+        const uploadResult = await uploadToCloudinary(req.file);
+        imageUrl = uploadResult.secure_url;
+        await User.update({ image: imageUrl }, { where: { id: userId } });
+      } else {
         const uploadResult = await uploadToCloudinary(req.file);
         imageUrl = uploadResult.secure_url;
         await User.update({ image: imageUrl }, { where: { id: userId } });

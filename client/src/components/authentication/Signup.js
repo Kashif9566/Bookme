@@ -162,8 +162,7 @@ const Signup = () => {
                       : undefined
                   );
                 }}
-                className="input mx-1"
-                value=""
+                className="form-control"
               />
             </div>
             <button

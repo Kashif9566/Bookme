@@ -33,20 +33,21 @@ const UpdateProfile = () => {
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
+    if (file || !user.image) {
       try {
         const formData = new FormData();
-        formData.append("image", file);
+        formData.append("image", file || avatarSrc);
         const response = await api.put(`/user/${user.id}/image`, formData);
+        console.log("Image Update Response:", response);
         if (response) {
           dispatch(updateUser(response.data));
           toast.success("Image updated successfully", { autoClose: 1000 });
         } else {
-          toast.error("error updating image", { autoClose: 1000 });
+          toast.error("Error updating image", { autoClose: 1000 });
         }
       } catch (error) {
         console.error("Error updating image", error);
-        toast.error("error updating image", { autoClose: 1000 });
+        toast.error("Error updating image", { autoClose: 1000 });
       }
     }
   };
@@ -62,7 +63,10 @@ const UpdateProfile = () => {
               <div className="edit-overlay-update">Edit</div>
             </div>
           ) : (
-            <img src={avatarSrc} alt="Default Avatar" />
+            <div className="update-profile-image" onClick={handleEditClick}>
+              <img className="avatar" src={avatarSrc} alt="Default Avatar" />
+              <div className="edit-overlay-update">Edit</div>
+            </div>
           )}
 
           <input

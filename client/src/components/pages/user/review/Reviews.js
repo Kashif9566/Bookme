@@ -93,7 +93,7 @@ const Reviews = ({ property }) => {
       <div className="col-md-12">
         <h4>
           Overall Rating : {totalRating.toFixed(2)}
-          <FontAwesomeIcon icon={faStar} />
+          <FontAwesomeIcon icon={faStar} style={{ color: "gold" }} />
         </h4>
         <h5>{reviews && `${reviews.length} Reviews`}</h5>
         <hr />
@@ -155,7 +155,7 @@ const Reviews = ({ property }) => {
                     {new Date(review.createdAt).toLocaleString()}
                   </span>
                 </div>
-                {userId === review.User.id && ( // Check if the user is the owner of the review
+                {userId === review.User.id && (
                   <span
                     style={{
                       marginLeft: "auto",
@@ -185,7 +185,7 @@ const Reviews = ({ property }) => {
                     <FontAwesomeIcon
                       key={index}
                       icon={faStar}
-                      style={{ fontSize: "12px" }}
+                      style={{ fontSize: "12px", color: "gold" }}
                     />
                   ))}
                 </span>

@@ -142,7 +142,10 @@ const PropertyDetails = () => {
                       </span>
                       <div className="d-flex align-items-center">
                         Rating: {totalRating.toFixed(2)}
-                        <FontAwesomeIcon icon={faStar} />
+                        <FontAwesomeIcon
+                          icon={faStar}
+                          style={{ color: "gold" }}
+                        />
                       </div>
                       <span>Reviews: {reviews.length}</span>
                     </div>
@@ -250,7 +253,10 @@ const PropertyDetails = () => {
                                 style={{ fontSize: "20px", fontWeight: 600 }}
                               >
                                 {totalRating.toFixed(2)}
-                                <FontAwesomeIcon icon={faStar} />
+                                <FontAwesomeIcon
+                                  icon={faStar}
+                                  style={{ color: "gold" }}
+                                />
                               </span>
                               <span>Rating</span>
                               <hr />
