@@ -46,7 +46,7 @@ const Analytics = () => {
         (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
       );
 
-      return total + (property ? property.price * durationInDays : 0);
+      return total + (property ? property.discountedPrice * durationInDays : 0);
     }, 0);
   };
   const totalRevenue = calculateTotalRevenue();

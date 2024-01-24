@@ -400,7 +400,7 @@ const PropertyDetails = () => {
                           {numNights === 1 ? "" : "s"}
                         </span>
 
-                        <span>${totalPrice}</span>
+                        <span>${parseFloat(totalPrice).toFixed(2)}</span>
                       </div>
                       <div className="d-flex align-items-center justify-content-between mx-2">
                         <span>Service fee</span>

@@ -32,7 +32,7 @@ const Property = sequelize.define(
       },
     },
     price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
     discount: {
@@ -41,7 +41,7 @@ const Property = sequelize.define(
       defaultValue: 0,
     },
     discountedPrice: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
     },
     rooms: {
